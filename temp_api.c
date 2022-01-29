@@ -6,6 +6,8 @@
 
 #include <malloc.h>
 
+#include <math.h>
+
 #include "temp_api.h"
 
 #define CSV_POSITIONS_COUNT 6
@@ -13,16 +15,37 @@
 
 #define PBWIDTH 20
 
+const char error_log_file[] = "error.log";
+
 char PBSTR[PBWIDTH];
 
 const char *months[] = 
 	{"January", "February", "March", "April", 
 	"May", "June", "July", "August", 
 	"September", "October", "November", "December"};
-		
-char file_name[255];
-int year_no = 0;
-char month_no = 0;
+	
+const int months_days[] = 
+	{31, 28, 31, 30, 
+	31, 30, 31, 31,
+	30, 31, 30, 31};
+
+int GetMonthDays(int year, int month)
+{
+	if (month != 2)
+		return months_days[month - 1];
+	if (year % 4 == 0)
+		return 29;
+	else
+		return 28;
+}
+
+void PrintCharString(int count, char fill_char)
+{
+	for (int i = 0; i < count; i++)
+		printf("%c", fill_char);
+	if (count > 0)
+		printf("\n");
+}
 
 void InitProgressBar()
 {
@@ -55,9 +78,9 @@ int CountFileLines(char file_name[])
 	return count;
 }
 
-int ReadFile(char file_name[], int* size, sensor** data)
+int ReadFile(char file_name[], int* size, sensor** data, readFileResults* rfr)
 {
-	const char status_format[] = "\r%d records loaded, %d errors found";
+	const char status_format[] = "\r%d records processed, %d errors found";
 	const char show_status = 1;
 	const char show_bar = 1;
 	const int status_step = 10000;	
@@ -78,44 +101,91 @@ int ReadFile(char file_name[], int* size, sensor** data)
 		file_lines_count = CountFileLines(file_name);
 	}	
 	//
-	int y, m, d, hh, mm, t;
-	int r, line_count = 0, error_count = 0;
+	int y, m, d, hh, mm, t, r;
 	char s[CSV_LINE_WIDTH];
 	//
 	printf("Loading file \"%s\"...\n", file_name);
 	//
+	int lines_count = 0, lines_error = 0;
+	uint64_t new_dt, min_dt = 0, max_dt = 0;
 	while ((r = fscanf(fp, "%d;%d;%d;%d;%d;%d", 
 						&y, &m, &d, &hh, &mm, &t)) > 0) 
 	{	
-		line_count++;
+		lines_count++;
 		if (r < CSV_POSITIONS_COUNT)
 		{
 			r = fscanf(fp, "%[^\n]", s);
-			error_count++;
+			lines_error++;
 			//printf("Line %d ERROR! \"%s\" \n", line_count, s);			
 		} else {
-			SensorsAddRecord(data, (*size)++, y, m, d, hh, mm, t);  
-			//printf("%d=%d;%d;%d;%d;%d;%d\n", r, y, m, d, hh, mm, t);		
+			SensorsAddRecord(data, (*size)++, y, m, d, hh, mm, t); 
+			new_dt = (*data + *size - 1)->encoded_datetime;
+			//
+			if (!min_dt) {
+				min_dt = new_dt;
+				max_dt = min_dt;
+			} else {
+				if (new_dt < min_dt)
+					min_dt = new_dt;
+				if (new_dt > max_dt)
+					max_dt = new_dt;	
+			}			
 		}	
 		//
-		if (show_status && (line_count % status_step == 0)) 	
+		if (show_status && (lines_count % status_step == 0)) 	
 		{	
 			(show_bar)
-				? PrintProgressBar((float)line_count / file_lines_count)
-				: printf(status_format, line_count, error_count);
+				? PrintProgressBar((float)lines_count / file_lines_count)
+				: printf(status_format, lines_count, lines_error);
 		}		
 	}
-	if (show_status && show_bar)
+	if (show_status) 
 	{
-		PrintProgressBar(1.0);
-		printf("\n");
-	}	
-	printf(status_format, line_count, error_count);
+		if (show_bar) 
+		{
+			PrintProgressBar(1.0);
+		} else {
+			printf(status_format, lines_count, lines_error);
+		}				
+	}
 	printf("\n");
+	//
+	printf("File loading completed!\n");	
+	//
+	strcpy(rfr->file_name, file_name);
+	rfr->lines_processed = lines_count;
+	rfr->lines_approved = lines_count - lines_error;
+	rfr->lines_rejected = lines_error;
+	rfr->min_datetime = min_dt;
+	rfr->max_datetime = max_dt;
 	//
 	fclose(fp);
 	//
 	return 1;
+}
+
+void PrintReadFileResults(readFileResults* rfr)
+{
+	uint8_t day1, month1, hour1, minute1,
+		day2, month2, hour2, minute2;
+	uint16_t year1, year2;
+	//
+	DecodeDateTime(rfr->min_datetime, &year1, &month1, &day1, 
+		&hour1, &minute1); 
+	DecodeDateTime(rfr->max_datetime, &year2, &month2, &day2, 
+		&hour2, &minute2);
+	//
+	PrintCharString(40, '-');
+	printf("File \"%s\" was successfully loaded!\n", rfr->file_name);
+	printf("%d lines processed, %d approved, %d rejected with errors\n",
+		rfr->lines_processed, rfr->lines_approved, rfr->lines_rejected);
+	if (rfr->lines_rejected)
+			printf("(see \"%s\" file for errors details)\n", error_log_file);
+	printf("Data start time is %02d.%02d.%04d %02d:%02d\n",
+			day1, month1, year1, hour1, minute1);
+	printf("Data final time is %02d.%02d.%04d %02d:%02d\n",
+			day2, month2, year2, hour2, minute2);			
+	PrintCharString(40, '-');		
 }
 
 void PrintHelp(char app_name[])
@@ -124,11 +194,11 @@ void PrintHelp(char app_name[])
 	printf("Usage: clear [options]\n");
 	printf("  -h This help text\n"); 
 	printf("  -f Specify folder. Example: %s -f data.csv\n", app_name);
-	printf("  -y Specify year. Example: %s -y 2020\n", app_name);				
 	printf("  -m Specify month number. Example: %s -m 5\n", app_name);
+	printf("  -y Specify year. Example: %s -y 2020\n", app_name);
 }
 
-int ProcessArguments(int argc, char *argv[])
+int ProcessArguments(int argc, char *argv[], arguments* args)
 {
 	int res = 0;
 	while ((res = getopt(argc, argv, "hf:y:m:")) != -1) 
@@ -137,17 +207,14 @@ int ProcessArguments(int argc, char *argv[])
 			case 'h':
 				PrintHelp(argv[0]);
                 return 0;
-			case 'f':
-				strcpy(file_name, optarg);
-				printf("File is \"%s\".\n", file_name); 
+			case 'f':				
+				strcpy(args->file_name, optarg);
 				break;
 			case 'y':
-				year_no = atoi(optarg);
-				printf("Year is %d.\n", year_no); 				
+				args->year_no = atoi(optarg); 			
 				break;	
 			case 'm':
-				month_no = atoi(optarg);
-				printf("Month is %s.\n", months[month_no - 1]); 
+				args->month_no = atoi(optarg); 
 				break;	
 			case '?': 
 				printf("Unknown argument: %s ", argv[optind - 1]);
@@ -158,6 +225,14 @@ int ProcessArguments(int argc, char *argv[])
 	return 1;
 }
 
+void PrintArguments(arguments* args)
+{
+	PrintCharString(40, '-');
+	printf("File is \"%s\".\n", args->file_name); 
+	printf("Year is %d.\n", args->year_no);
+	printf("Month is %s.\n", months[args->month_no - 1]); 
+	PrintCharString(40, '-');
+}
 
 uint64_t EncodeDateTime(uint16_t year, uint8_t month, uint8_t day, 
 	uint8_t hour, uint8_t minute)
@@ -168,6 +243,16 @@ uint64_t EncodeDateTime(uint16_t year, uint8_t month, uint8_t day,
 						hour) * 100 + 
 							minute;
 }	
+
+void DecodeDateTime(uint64_t DateTime, uint16_t* year, uint8_t* month, 
+	uint8_t* day, uint8_t* hour, uint8_t* minute)
+{
+	*year = DateTime / (int)pow(10, 8); 
+	*month = (DateTime % (int)pow(10, 8)) / (int)pow(10, 6);
+	*day = (DateTime % (int)pow(10, 6)) / (int)pow(10, 4);
+	*hour = (DateTime % (int)pow(10, 4)) / 100;
+	*minute = DateTime % 100;
+}		
 
 unsigned int DateToInt(sensor* info)
 {
@@ -237,21 +322,6 @@ void SensorsAddRecord(sensor** info, int number,
 		SensorsEncodeDateTime(new_value);
 		//EncodeDateTime(year, month, day, hour, minute);
 	new_value->t = t;
-	//
-	/*
-	printf("-----\n");
-		for (int i = 0; i <= number; i++)
-		printf("%04d-%02d-%02d %02d:%02d %llu t=%3d\n",
-			(*info + i)->year,
-			(*info + i)->month,
-			(*info + i)->day,
-			(*info + i)->hour,
-			(*info + i)->minute,
-			(*info + i)->encoded_datetime,
-			(*info + i)->t
-		);
-	printf("-----\n");
-	*/
 }
 
 void SensorsPrint(sensor* info, int number)
