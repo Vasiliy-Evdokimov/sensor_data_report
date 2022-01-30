@@ -39,11 +39,12 @@ typedef struct {
 typedef struct {
 	uint8_t month;
 	uint16_t year;	
+	uint32_t encoded_my;
 	uint16_t count;
 	int32_t sum_t;
 	int8_t min_t;
 	int8_t max_t;	
-	int8_t avg_t;
+	float avg_t;
 } monthReport;
 
 void PrintCharString(int count, char fill_char);

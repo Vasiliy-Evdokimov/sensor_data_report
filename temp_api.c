@@ -334,12 +334,8 @@ void SensorsOrderByDate(sensor* info, int n)
 {
 	for (int i = 0; i < n; i++)
 		for (int j = i; j < n; j++)
-			if (SensorsEncodeDateTime(info + i) >=
-				SensorsEncodeDateTime(info + j))
-			/*
-			if ((info + i)->encoded_datetime >= 
+			if ((info + i)->encoded_datetime >
 				(info + j)->encoded_datetime)
-			*/ 
 				SensorsSwapByIndex(info, i, j);
 }
 
@@ -367,19 +363,24 @@ void SensorsAddRecord(sensor** info, int number,
 	new_value->t = t;
 }
 
+void SensorPrint(sensor* item)
+{
+	printf("%04d-%02d-%02d %02d:%02d %llu t=%3d\n",
+		item->year,
+		item->month,
+		item->day,
+		item->hour,
+		item->minute,
+		item->encoded_datetime,
+		item->t
+	);
+}
+
 void SensorsPrint(sensor* info, int number)
 {
 	PrintCharString(40, '=');
 	for (int i = 0; i < number; i++)
-		printf("%04d-%02d-%02d %02d:%02d %llu t=%3d\n",
-			info[i].year,
-			info[i].month,
-			info[i].day,
-			info[i].hour,
-			info[i].minute,
-			info[i].encoded_datetime,
-			info[i].t
-		);
+		SensorPrint(&info[i]);
 }
 
 void ReportGetHeader(arguments* args)
@@ -401,18 +402,24 @@ int MonthReportIndex(int months_count, monthReport* months,
 	return result;	
 }
 
+void MonthPrint(monthReport* month)
+{
+	printf("%d %d %d %d %d %d %d\n",
+		month->year,
+		month->month,
+		month->encoded_my,
+		month->count,
+		month->sum_t,
+		month->min_t,
+		month->max_t
+	);
+}
+
 void MonthsPrint(int months_size, monthReport* months)
 {
 	PrintCharString(40, '=');
 	for (int i = 0; i < months_size; i++)
-		printf("%d %d %d %d %d %d\n",
-			months[i].year,
-			months[i].month,
-			months[i].count,
-			months[i].sum_t,
-			months[i].min_t,
-			months[i].max_t
-		);
+		MonthPrint(&months[i]);
 }
 
 void MonthInit(monthReport** report_month, uint16_t year, uint8_t month, int8_t t)
@@ -420,6 +427,7 @@ void MonthInit(monthReport** report_month, uint16_t year, uint8_t month, int8_t 
 	monthReport* m = *report_month;
 	m->year = year;
 	m->month = month;
+	m->encoded_my = year * 100 + month;
 	m->count = 0;
 	m->sum_t = 0;
 	m->min_t = t;
@@ -437,24 +445,35 @@ void MonthProcessNewData(monthReport** report_month, int8_t t)
 		m->max_t = t;	
 }
 
-void MonthPrint(monthReport* month)
+void MonthsSwapByIndex(monthReport* months, int i, int j)
 {
-	printf("%d %d %d %d %d %d\n",
-			month->year,
-			month->month,
-			month->count,
-			month->sum_t,
-			month->min_t,
-			month->max_t
-	);
+	monthReport temp;
+	temp = months[i];
+	months[i] = months[j];
+	months[j] = temp;
 }
+
+void MonthOrderByDate(int month_size, monthReport* months)
+{
+	for (int i = 0; i < month_size; i++)
+		for (int j = i; j < month_size; j++)
+			if ((months + i)->encoded_my >
+				(months + j)->encoded_my)
+				MonthsSwapByIndex(months, i, j);
+}
+
+void PrintReportLine(uint16_t year, uint8_t month, uint16_t count,
+	int8_t min_t, int8_t max_t,	float avg_t)
+{
+	printf("%8d %8d %8d %8d %8d %10.3f\n",
+		year, month, count,	min_t, max_t, avg_t);
+}	
 
 void ReportGetValues(int data_size, sensor* data, arguments app_args, 
 	readFileResults read_file_results)
 {
 	monthReport* months = NULL;
 	int months_count = 0;
-	monthReport* new_year = NULL;
 	monthReport* new_month = NULL;
 	//
 	uint64_t start_date, final_date;
@@ -478,33 +497,10 @@ void ReportGetValues(int data_size, sensor* data, arguments app_args,
 		//
 		if ((current_year != d_year) || 
 			(current_month != d_month))
-		{
-			printf("Enter 1\n");
-			if ((item_index = MonthReportIndex(months_count, months, 
-					d_year, 13)) < 0)
-			{
-				printf("Enter 2\n");
-				//
-				months_count++;
-				months = (monthReport*)realloc(months, months_count * sizeof(monthReport));
-				if (months == NULL)
-				{	
-					printf("Memory not allocated.\n");
-					return;
-				}  
-				new_year = months + months_count - 1;
-				MonthInit(&new_year, d_year, 13, d_t);
-				printf("new_year Init = ");
-				MonthPrint(new_year);
-			} else {
-				new_year = months + item_index;				
-			}
-			printf("new year p = %p\n", new_year);
-			//
+		{			
 			if ((item_index = MonthReportIndex(months_count, months, 
 					d_year, d_month)) < 0)
 			{
-				printf("Enter 3\n");
 				months_count++;
 				months = (monthReport*)realloc(months, months_count * sizeof(monthReport));
 				if (months == NULL)
@@ -523,19 +519,55 @@ void ReportGetValues(int data_size, sensor* data, arguments app_args,
 		}
 		//
 		MonthProcessNewData(&new_month, d_t);
-		//
-		printf("new_year before = ");
-		MonthPrint(new_year);
-		MonthProcessNewData(&new_year, d_t);
-		printf("new_year after = ");
-		MonthPrint(new_year);
 	}
 	//
+	//MonthsPrint(months_count, months);
+	//
+	MonthOrderByDate(months_count, months);
+	//
 	MonthsPrint(months_count, months);
+	//
+	PrintCharString(40, '+');
+	int count = 0, sum_t = 0, min_t = 0, max_t = 0;	
+	
+	for (int i = 0; i < months_count; i++)
+	{
+		months[i].avg_t = (float)months[i].sum_t / months[i].count;
+		//
+		count += months[i].count;
+		sum_t += months[i].sum_t;
+		if (!i) 
+		{
+			min_t = months[i].min_t;
+			max_t = months[i].max_t;
+		}
+		if (min_t > months[i].min_t)
+			min_t = months[i].min_t;
+		if (max_t < months[i].max_t)
+			max_t = months[i].max_t;		 	
+		//	
+		PrintReportLine(
+			months[i].year,
+			months[i].month,
+			months[i].count,
+			months[i].min_t,
+			months[i].max_t,
+			months[i].avg_t
+		);
+	}
+	PrintReportLine(
+		0,
+		0,
+		count,
+		min_t,
+		max_t,
+		(float)sum_t / count
+	);
+	
 	//
 	if (months != NULL) 
 	{		
 		free(months);
-		DBG printf("Moths report array is released.\n");
+		DBG printf("Months report array is released.\n");
 	}	
 }
