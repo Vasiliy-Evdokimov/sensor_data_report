@@ -11,7 +11,8 @@
 #include "temp_api.h"
 
 #define CSV_POSITIONS_COUNT 6
-#define CSV_LINE_WIDTH 32
+#define CSV_LINE_WIDTH 64
+#define CSV_LINE_SIZE CSV_LINE_WIDTH * sizeof(char)
 
 #define PBWIDTH 20
 
@@ -78,12 +79,30 @@ int CountFileLines(char file_name[])
 	return count;
 }
 
+void WriteErrorsFile(const char file_name[], int errors_count, char* errors_array)
+{
+	FILE *fp;
+	fp = fopen(file_name, "w"); 
+	if (fp == NULL)
+	{
+		printf("Some problems occurred while opening file \"%s\"!", file_name);
+		return;
+	}
+	//
+	for (int i = 0; i < errors_count; i++)
+		fprintf(fp, "%s\n", errors_array + i * CSV_LINE_SIZE);
+	//
+	fclose(fp);
+}
+
 int ReadFile(char file_name[], int* size, sensor** data, readFileResults* rfr)
 {
 	const char status_format[] = "\r%d records processed, %d errors found";
 	const char show_status = 1;
 	const char show_bar = 1;
-	const int status_step = 10000;	
+	const int status_step = 10000;
+	//
+	char *errors = NULL;	
 	//
 	FILE *fp;
 	//
@@ -116,7 +135,11 @@ int ReadFile(char file_name[], int* size, sensor** data, readFileResults* rfr)
 		{
 			r = fscanf(fp, "%[^\n]", s);
 			lines_error++;
-			//printf("Line %d ERROR! \"%s\" \n", line_count, s);			
+			//
+			errors = (char*)realloc(errors, lines_error * CSV_LINE_SIZE);
+			sprintf(errors + (lines_error - 1) * CSV_LINE_SIZE, 
+				"Line %d ERROR! \"%s\"", lines_count, s);
+			s[0] = '\0';	
 		} else {
 			SensorsAddRecord(data, (*size)++, y, m, d, hh, mm, t); 
 			new_dt = (*data + *size - 1)->encoded_datetime;
@@ -150,7 +173,16 @@ int ReadFile(char file_name[], int* size, sensor** data, readFileResults* rfr)
 	}
 	printf("\n");
 	//
-	printf("File loading completed!\n");	
+	printf("File loading completed!\n");
+	//
+	if ((lines_error > 0) && (errors != NULL))
+		WriteErrorsFile(error_log_file, lines_error, errors);
+	//
+	if (errors != NULL) 
+	{		
+		free(errors);
+		DBG printf("Errors array is released.\n");
+	}	
 	//
 	strcpy(rfr->file_name, file_name);
 	rfr->lines_processed = lines_count;
@@ -326,7 +358,7 @@ void SensorsAddRecord(sensor** info, int number,
 
 void SensorsPrint(sensor* info, int number)
 {
-	printf("===================================\n");
+	PrintCharString(40, '=');
 	for (int i = 0; i < number; i++)
 		printf("%04d-%02d-%02d %02d:%02d %llu t=%3d\n",
 			info[i].year,

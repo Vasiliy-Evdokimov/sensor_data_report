@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 	//
 	timer = time(NULL);
 	ptr = localtime(&timer);
-	printf("Started at %02d:%02d:%02d\n", 
+	DBG printf("Started at %02d:%02d:%02d\n", 
 		ptr->tm_hour, ptr->tm_min, ptr->tm_sec);
 	//
 	setlocale(LC_ALL, "Russian");
@@ -31,14 +31,14 @@ int main(int argc, char *argv[])
 	//SensorsPrint(info, data_size);
 	//
 	if (info != NULL) 
-	{
-		printf("Structures are relesed.\n");
+	{		
 		free(info);
+		DBG printf("Structures array is released.\n");
 	}	
 	//
 	timer = time(NULL);
 	ptr = localtime(&timer);
-	printf("Finished at %02d:%02d:%02d\n", 
+	DBG printf("Finished at %02d:%02d:%02d\n", 
 		ptr->tm_hour, ptr->tm_min, ptr->tm_sec);
 	//
 	getchar();	

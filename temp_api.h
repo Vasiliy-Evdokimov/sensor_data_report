@@ -1,5 +1,13 @@
 #include <stdint.h>
 
+#define DEBUG
+
+#ifdef DEBUG
+	#define DBG if(1)
+#else
+	#define DBG if(0)
+#endif
+
 typedef struct {
 	char file_name[255];
 	int year_no;
