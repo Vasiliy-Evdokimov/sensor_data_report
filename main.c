@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include <locale.h>
 #include <time.h>
 #include <malloc.h>
 #include "temp_api.h"
+#include "localization.c"
 
 int main(int argc, char *argv[])
 {
@@ -18,11 +18,13 @@ int main(int argc, char *argv[])
 	ptr = localtime(&timer);
 	DBG printf("Started at %02d:%02d:%02d\n", 
 		ptr->tm_hour, ptr->tm_min, ptr->tm_sec);
-	//
-	setlocale(LC_ALL, "Russian");
 	//	
 	if (!ProcessArguments(argc, argv, &app_args))
 		return 1;	
+	//
+	InitLC(app_args.locale_id);
+	DBG printf(GetLC(TEST_MSG));
+	//	
 	PrintArguments(&app_args);	
 	if (!ReadFile(app_args.file_name, &data_size, &info, &read_file_results))
 		return 1;
@@ -35,6 +37,8 @@ int main(int argc, char *argv[])
 		free(info);
 		DBG printf("Structures array is released.\n");
 	}	
+	//
+	FinalizeLC();
 	//
 	timer = time(NULL);
 	ptr = localtime(&timer);

@@ -9,6 +9,7 @@
 #include <math.h>
 
 #include "temp_api.h"
+#include "localization.h"
 
 #define CSV_POSITIONS_COUNT 6
 #define CSV_LINE_WIDTH 64
@@ -231,9 +232,11 @@ void PrintHelp(char app_name[])
 }
 
 int ProcessArguments(int argc, char *argv[], arguments* args)
-{
+{	
+	args->locale_id = 0;
+	//
 	int res = 0;
-	while ((res = getopt(argc, argv, "hf:y:m:")) != -1) 
+	while ((res = getopt(argc, argv, "hf:y:m:l:")) != -1) 
 	{
 		switch (res) {
 			case 'h':
@@ -248,6 +251,9 @@ int ProcessArguments(int argc, char *argv[], arguments* args)
 			case 'm':
 				args->month_no = atoi(optarg); 
 				break;	
+			case 'l':
+				args->locale_id = atoi(optarg); 
+				break;	
 			case '?': 
 				printf("Unknown argument: %s ", argv[optind - 1]);
 				printf("Try -h for help\n");
@@ -260,9 +266,9 @@ int ProcessArguments(int argc, char *argv[], arguments* args)
 void PrintArguments(arguments* args)
 {
 	PrintCharString(40, '-');
-	printf("File is \"%s\".\n", args->file_name); 
-	printf("Year is %d.\n", args->year_no);
-	printf("Month is %s.\n", months[args->month_no - 1]); 
+	printf(GetLC(FILE_IS), args->file_name);
+	printf(GetLC(YEAR_IS), args->year_no); 
+	printf(GetLC(MONTH_IS), months[args->month_no - 1]);	
 	PrintCharString(40, '-');
 }
 
@@ -376,8 +382,7 @@ void GetHelpInfo()
 	//
 }
 
-void ReportGetHeader(uint16_t year, uint8_t month, uint8_t day, 
-	uint8_t hour, uint8_t minute)
+void ReportGetHeader(arguments* args)
 {
 	//
 }	

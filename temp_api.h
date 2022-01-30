@@ -14,6 +14,7 @@ typedef struct {
 	char month_no;
 	int year_no2;
 	char month_no2;
+	char locale_id;
 } arguments;
 
 typedef struct {
@@ -34,6 +35,14 @@ typedef struct {
 	uint64_t min_datetime;
 	uint64_t max_datetime;
 } readFileResults;
+
+typedef struct {
+	uint8_t month;
+	uint16_t year;	
+	uint8_t min_t;
+	uint8_t max_t;
+	uint8_t avg_t;
+} monthReport;
 
 void PrintCharString(int count, char fill_char);
 
@@ -71,7 +80,6 @@ uint64_t SensorsEncodeDateTime(sensor* info);
 
 void GetHelpInfo();
 
-void ReportGetHeader(uint16_t year, uint8_t month, uint8_t day, 
-	uint8_t hour, uint8_t minute);
+void ReportGetHeader(arguments* args);
 	
 void ReportGetValues(sensor* info, uint64_t period_start, uint64_t period_final);
