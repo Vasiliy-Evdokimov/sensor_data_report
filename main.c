@@ -4,6 +4,17 @@
 #include "temp_api.h"
 #include "localization.c"
 
+time_t timer;
+struct tm *ptr;
+
+void PrintTime()
+{
+	timer = time(NULL);
+	ptr = localtime(&timer);
+	printf("Now is %02d:%02d:%02d\n", 
+		ptr->tm_hour, ptr->tm_min, ptr->tm_sec);
+}	
+
 int main(int argc, char *argv[])
 {
 	int data_size = 0;
@@ -11,13 +22,8 @@ int main(int argc, char *argv[])
 	readFileResults read_file_results;
 	arguments app_args;
 	//
-	time_t timer;
-	struct tm *ptr;
 	//
-	timer = time(NULL);
-	ptr = localtime(&timer);
-	DBG printf("Started at %02d:%02d:%02d\n", 
-		ptr->tm_hour, ptr->tm_min, ptr->tm_sec);
+	DBG PrintTime();
 	//	
 	if (!ProcessArguments(argc, argv, &app_args))
 		return 1;	
@@ -30,7 +36,9 @@ int main(int argc, char *argv[])
 		return 1;
 	PrintReadFileResults(&read_file_results);		
 	//
-	//SensorsPrint(info, data_size);
+	SensorsPrint(info, data_size);	
+	//
+	ReportGetValues(data_size, info, app_args, read_file_results);
 	//
 	if (info != NULL) 
 	{		
@@ -40,10 +48,7 @@ int main(int argc, char *argv[])
 	//
 	FinalizeLC();
 	//
-	timer = time(NULL);
-	ptr = localtime(&timer);
-	DBG printf("Finished at %02d:%02d:%02d\n", 
-		ptr->tm_hour, ptr->tm_min, ptr->tm_sec);
+	DBG PrintTime();
 	//
 	getchar();	
 	//

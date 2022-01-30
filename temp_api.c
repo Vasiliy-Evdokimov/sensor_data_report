@@ -33,6 +33,8 @@ const int months_days[] =
 
 int GetMonthDays(int year, int month)
 {
+	if (month <= 0)
+		return 0;
 	if (month != 2)
 		return months_days[month - 1];
 	if (year % 4 == 0)
@@ -268,7 +270,10 @@ void PrintArguments(arguments* args)
 	PrintCharString(40, '-');
 	printf(GetLC(FILE_IS), args->file_name);
 	printf(GetLC(YEAR_IS), args->year_no); 
-	printf(GetLC(MONTH_IS), months[args->month_no - 1]);	
+	printf(GetLC(MONTH_IS), 
+		(args->month_no > 0) 
+			? months[args->month_no - 1]
+			: "(not chosen)");
 	PrintCharString(40, '-');
 }
 
@@ -377,17 +382,160 @@ void SensorsPrint(sensor* info, int number)
 		);
 }
 
-void GetHelpInfo()
-{
-	//
-}
-
 void ReportGetHeader(arguments* args)
 {
 	//
 }	
 
-void ReportGetValues(sensor* info, uint64_t period_start, uint64_t period_final)
+int MonthReportIndex(int months_count, monthReport* months, 
+	int year_no, int month_no)
 {
+	int result = -1;
+	for (int i = 0; i < months_count; i++)
+		if ((months[i].year == year_no) &&
+			(months[i].month == month_no))
+		{
+			result = i;
+			break;
+		}	
+	return result;	
+}
+
+void MonthsPrint(int months_size, monthReport* months)
+{
+	PrintCharString(40, '=');
+	for (int i = 0; i < months_size; i++)
+		printf("%d %d %d %d %d %d\n",
+			months[i].year,
+			months[i].month,
+			months[i].count,
+			months[i].sum_t,
+			months[i].min_t,
+			months[i].max_t
+		);
+}
+
+void MonthInit(monthReport** report_month, uint16_t year, uint8_t month, int8_t t)
+{
+	monthReport* m = *report_month;
+	m->year = year;
+	m->month = month;
+	m->count = 0;
+	m->sum_t = 0;
+	m->min_t = t;
+	m->max_t = t;	
+}
+
+void MonthProcessNewData(monthReport** report_month, int8_t t)
+{
+	monthReport* m = *report_month;
+	m->count++;
+	m->sum_t += t;
+	if (m->min_t > t)
+		m->min_t = t;
+	if (m->max_t < t)
+		m->max_t = t;	
+}
+
+void MonthPrint(monthReport* month)
+{
+	printf("%d %d %d %d %d %d\n",
+			month->year,
+			month->month,
+			month->count,
+			month->sum_t,
+			month->min_t,
+			month->max_t
+	);
+}
+
+void ReportGetValues(int data_size, sensor* data, arguments app_args, 
+	readFileResults read_file_results)
+{
+	monthReport* months = NULL;
+	int months_count = 0;
+	monthReport* new_year = NULL;
+	monthReport* new_month = NULL;
 	//
+	uint64_t start_date, final_date;
+	//
+	start_date = (app_args.year_no * 100ull + 1) * (int)pow(10, 6);
+	final_date = (app_args.year_no * 100ull + 12) * (int)pow(10, 6);
+	//
+	int d_year, d_month, d_t;
+	int current_year = 0;
+	int current_month = 0;
+	int item_index = 0;
+	for (int i = 0; i < data_size; i++)
+	{
+		if ((data[i].encoded_datetime < start_date) ||
+			(data[i].encoded_datetime > final_date))
+			continue;
+		//
+		d_year = data[i].year;
+		d_month = data[i].month;
+		d_t = data[i].t;
+		//
+		if ((current_year != d_year) || 
+			(current_month != d_month))
+		{
+			printf("Enter 1\n");
+			if ((item_index = MonthReportIndex(months_count, months, 
+					d_year, 13)) < 0)
+			{
+				printf("Enter 2\n");
+				//
+				months_count++;
+				months = (monthReport*)realloc(months, months_count * sizeof(monthReport));
+				if (months == NULL)
+				{	
+					printf("Memory not allocated.\n");
+					return;
+				}  
+				new_year = months + months_count - 1;
+				MonthInit(&new_year, d_year, 13, d_t);
+				printf("new_year Init = ");
+				MonthPrint(new_year);
+			} else {
+				new_year = months + item_index;				
+			}
+			printf("new year p = %p\n", new_year);
+			//
+			if ((item_index = MonthReportIndex(months_count, months, 
+					d_year, d_month)) < 0)
+			{
+				printf("Enter 3\n");
+				months_count++;
+				months = (monthReport*)realloc(months, months_count * sizeof(monthReport));
+				if (months == NULL)
+				{	
+					printf("Memory not allocated.\n");
+					return;
+				}  
+				new_month = months + months_count - 1;
+				MonthInit(&new_month, d_year, d_month, d_t);
+			} else {
+				new_month = months + item_index;
+			}	
+			//
+			current_year = d_year;
+			current_month = d_month;		
+		}
+		//
+		MonthProcessNewData(&new_month, d_t);
+		//
+		printf("new_year before = ");
+		MonthPrint(new_year);
+		MonthProcessNewData(&new_year, d_t);
+		printf("new_year after = ");
+		MonthPrint(new_year);
+	}
+	//
+	MonthsPrint(months_count, months);
+	//
+	if (months != NULL) 
+	{		
+		free(months);
+		DBG printf("Moths report array is released.\n");
+	}	
 }
