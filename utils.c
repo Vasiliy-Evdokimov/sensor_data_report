@@ -3,7 +3,6 @@
 #include <time.h>
 #include <conio.h>
 
-#include "temp_api.h"
 #include "localization.h"
 #include "utils.h"
 
@@ -81,9 +80,4 @@ void DecodeDateTime(unsigned long long DateTime, short* year, char* month,
 	*day = (DateTime % (int)pow(10, 6)) / (int)pow(10, 4);
 	*hour = (DateTime % (int)pow(10, 4)) / 100;
 	*minute = DateTime % 100;
-}		
-
-unsigned int DateToInt(sensor* info)
-{
-	return info->year << 16 | info->month << 8 | info->day;
 }

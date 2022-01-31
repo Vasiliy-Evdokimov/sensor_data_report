@@ -13,5 +13,3 @@ unsigned long long EncodeDateTime(short year, char month, char day,
 	
 void DecodeDateTime(unsigned long long DateTime, short* year, char* month, 
 	char* day, char* hour, char* minute);
-	
-unsigned int DateToInt(sensor* info);

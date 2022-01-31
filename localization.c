@@ -2,6 +2,7 @@
 #include <malloc.h>
 #include <string.h>
 #include <locale.h>
+
 #include "localization.h"
 
 lc_record* lc_array = NULL;
