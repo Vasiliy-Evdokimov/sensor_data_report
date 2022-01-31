@@ -27,7 +27,7 @@ const int months_days[] =
 	31, 30, 31, 31,
 	30, 31, 30, 31};
 	
-int ShowMenu(arguments* args)
+int ShowMenu(arguments* args, readFileResults* rfr)
 {
 	char choice = '0';
 	//
@@ -72,12 +72,13 @@ int ShowMenu(arguments* args)
 				args->year_no2 = y;  
 				args->month_no2 = m;
 				goto OUT;
+			case '4':
+				PrintReadFileResults(rfr);
+				continue;				
 			case '5':
 				args->locale_id = !args->locale_id;
 				LOCALE_ID = args->locale_id; 
 				continue;
-			case '4':
-				goto OUT;
 			case '0':
 			case 'q':
 				return 0;	
@@ -325,12 +326,22 @@ void PrintReadFileResults(readFileResults* rfr)
 
 void PrintHelp(char app_name[])
 {
-	printf("This is example of list directory.\n");
-	printf("Usage: clear [options]\n");
-	printf("  -h This help text\n"); 
-	printf("  -f Specify folder. Example: %s -f data.csv\n", app_name);
-	printf("  -m Specify month number. Example: %s -m 5\n", app_name);
-	printf("  -y Specify year. Example: %s -y 2020\n", app_name);
+	printf("This application reads specified csv-file containing temperature sensor data and forms statistics report.\n");
+	printf("Usage: %s -f <file_name> [options]\n", app_name);
+	printf("Options:\n"); 
+	printf("    -h This help text\n"); 
+	printf("    -f Specify corresponding csv-file. Option is required.\n");
+	printf("       Example: %s -f data.csv\n", app_name);
+	printf("    -y Specify year of report or start year of report period.\n");
+	printf("       Example: %s -f data.csv -y 2020\n", app_name);
+	printf("    -m Specify month number. The year option is required.\n");
+	printf("       Example: %s -f data.csv -y 2020 -m 5\n", app_name);
+	printf("    -a Specify final year of report period. Start year option is required.\n");
+	printf("       Example: %s -f data.csv -y 2020 -a 2021\n", app_name);
+	printf("    -b Specify final month of report period. The start and final year options are required.\n");
+	printf("       Example: %s -f data.csv -y 2020 -m 5 -a 2021 -b 3\n", app_name);
+	printf("    -L Specify localization. 0 for ENG (default), 1 for RUS.\n");
+	printf("       Example: %s -f data.csv -y 2020 -m 5 -L 1\n", app_name);	
 }
 
 int ProcessArguments(int argc, char *argv[], arguments* args)
@@ -618,7 +629,7 @@ void ReportGetPeriodFromArgs(arguments app_args,
 	}
 }
 
-void ReportPrintTitle(arguments app_args)
+void ReportPrintTitle(arguments app_args, uint64_t start_date, uint64_t final_date)
 {
 	if (app_args.year_no && !app_args.month_no && !app_args.year_no2)
 		printf("%d", app_args.year_no);  
@@ -636,6 +647,18 @@ void ReportPrintTitle(arguments app_args)
 		printf("%s %d - %s %d", 
 			GetMonthName(app_args.month_no), app_args.year_no,
 			GetMonthName(app_args.month_no2), app_args.year_no2);
+	//
+	if (!app_args.year_no && !app_args.month_no && 
+		!app_args.year_no2 && !app_args.month_no2)
+	{
+		uint16_t y; 
+		uint8_t m, d, hh, mm;
+		DecodeDateTime(start_date, &y, &m, &d, &hh, &mm);
+		printf("%02d.%02d.%04d %02d:%02d - ", d, m, y, hh, mm); 
+		DecodeDateTime(final_date, &y, &m, &d, &hh, &mm);
+		printf("%02d.%02d.%04d %02d:%02d", d, m, y, hh, mm);
+	}		
+	//		
 	printf("\n");			
 }	
 
@@ -701,7 +724,7 @@ void ReportGetValues(int data_size, sensor* data, arguments app_args,
 	//
 	PrintCharString(DELIMETER_WIDTH, '=', 1);
 	printf("\tReport period: ");
-	ReportPrintTitle(app_args);
+	ReportPrintTitle(app_args, start_date, final_date);
 	PrintCharString(DELIMETER_WIDTH, '=', 1);
 	//
 	printf("%8s | %10s | %8s | %8s | %8s | %10s |\n",

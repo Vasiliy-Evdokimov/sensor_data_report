@@ -49,7 +49,7 @@ typedef struct {
 
 void PrintAppTitle(const char title[]);
 
-int ShowMenu(arguments* args);
+int ShowMenu(arguments* args, readFileResults* rfr);
 
 void PrintTime();
 

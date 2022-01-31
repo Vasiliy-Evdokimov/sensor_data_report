@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <conio.h>
 #include <malloc.h>
 #include "temp_api.h"
 #include "localization.c"
@@ -29,21 +28,14 @@ int main(int argc, char *argv[])
 	//
 	//SensorsPrint(info, data_size);	
 	//
-	int menu_res;
 	while (1)
 	{
 		ReportGetValues(data_size, info, app_args, read_file_results);
 		//
 		PrintAppTitle(GetLC(APP_TITLE));
 		//
-		menu_res = ShowMenu(&app_args);
-		if (menu_res == 0)
-			break;
-		if (menu_res == 4) 
-		{
-			PrintReadFileResults(&read_file_results);
-			getch();
-		}				
+		if (!ShowMenu(&app_args, &read_file_results))
+			break;						
 	}
 	//
 	if (info != NULL) 
