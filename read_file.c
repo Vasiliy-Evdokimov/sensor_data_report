@@ -7,6 +7,7 @@
 #include "utils.h"
 #include "interface.h"
 #include "read_file.h"
+#include "sensors.h"
 
 #define CSV_POSITIONS_COUNT 6
 #define CSV_LINE_WIDTH 64
