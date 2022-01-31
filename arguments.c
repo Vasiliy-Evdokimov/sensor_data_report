@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#include "temp_api.h"
+#include "structs.h"
 #include "localization.h"
 #include "utils.h"
 #include "interface.h"
