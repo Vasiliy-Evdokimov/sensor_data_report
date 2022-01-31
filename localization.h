@@ -14,6 +14,8 @@
 #define MONTH2_IS 	5
 #define NOT_CHOSEN	6
 
+#define APP_TITLE	10
+
 #define MONTH_JAN 11
 #define MONTH_FEB 12
 #define MONTH_MAR 13
@@ -32,6 +34,8 @@ typedef struct {
 	uint8_t MSG_ID;
 	char MSG[MSG_LENGTH];
 } lc_record;
+
+extern int LOCALE_ID;
 
 void InitLC(int a_lc_id);
 

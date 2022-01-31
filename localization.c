@@ -7,7 +7,7 @@
 lc_record* lc_array = NULL;
 int lc_record_count = 0;
 
-static int LOCALE_ID = 0;
+int LOCALE_ID = 0;
 
 void AddLC(uint8_t lng_id, uint8_t msg_id, char msg[MSG_LENGTH])
 {
@@ -50,6 +50,8 @@ void InitLC(int a_lc_id)
 	AddLC(ENG, TEST_MSG, "ENG ENG ENG\n");
 	AddLC(RUS, TEST_MSG, "пся пся пся\n");
 	//
+	AddLC(ENG, APP_TITLE, "..:: TEMPERATURE SENSOR REPORT ::..");
+	//
 	AddLC(ENG, FILE_IS, "File is \"%s\".\n");
 	AddLC(ENG, YEAR_IS, "Year is %d.\n");
 	AddLC(ENG, MONTH_IS, "Month is %s.\n");
@@ -70,6 +72,8 @@ void InitLC(int a_lc_id)
 	AddLC(ENG, MONTH_NOV, "November");
 	AddLC(ENG, MONTH_DEC, "December");	
 	//
+	//
+	AddLC(RUS, APP_TITLE, "..:: нрвер он дюрвхйс релоепюрспш ::..");
 	//
 	AddLC(RUS, FILE_IS, "тЮИК \"%s\".\n");
 	AddLC(RUS, YEAR_IS, "цНД %d.\n");
