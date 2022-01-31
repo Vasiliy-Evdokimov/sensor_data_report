@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include "temp_api.h"
-#include "localization.c"
+#include "localization.h"
 
 int main(int argc, char *argv[])
 {
