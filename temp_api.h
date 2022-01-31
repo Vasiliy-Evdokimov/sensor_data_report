@@ -44,6 +44,3 @@ typedef struct {
 	signed char max_t;	
 	float avg_t;
 } monthReport;
-
-void ReportGetValues(int data_size, sensor* data, arguments app_args, 
-	readFileResults read_file_results);
