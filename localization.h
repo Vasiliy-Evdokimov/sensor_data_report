@@ -1,5 +1,3 @@
-#include <stdint.h>
-
 #define MSG_LENGTH 128
 
 #define ENG 0
