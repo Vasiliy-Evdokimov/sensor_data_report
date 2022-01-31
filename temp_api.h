@@ -46,10 +46,6 @@ typedef struct {
 } monthReport;
 
 
-int ProcessArguments(int argc, char *argv[], arguments* args);
-
-void PrintArguments(arguments* args);
-
 void SensorsSwapByIndex(sensor* info, int i, int j);
 
 void SensorsOrderByT(sensor* info, int n);
