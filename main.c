@@ -4,6 +4,7 @@
 #include "localization.h"
 #include "utils.h"
 #include "interface.h"
+#include "read_file.h"
 
 int main(int argc, char *argv[])
 {

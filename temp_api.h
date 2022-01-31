@@ -1,5 +1,3 @@
-//#include <stdint.h>
-
 #define DEBUG
 
 #ifdef DEBUG
@@ -47,9 +45,6 @@ typedef struct {
 	float avg_t;
 } monthReport;
 
-void PrintReadFileResults(readFileResults* rfr);
-
-int ReadFile(char file_name[], int* size, sensor** data, readFileResults* rfr);
 
 int ProcessArguments(int argc, char *argv[], arguments* args);
 

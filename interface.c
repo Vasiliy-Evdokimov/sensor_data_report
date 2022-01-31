@@ -6,6 +6,7 @@
 #include "localization.h"
 #include "utils.h"
 #include "interface.h"
+#include "read_file.h"
 
 char PBSTR[PBWIDTH];
 
