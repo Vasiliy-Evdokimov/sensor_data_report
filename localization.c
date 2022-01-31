@@ -9,7 +9,7 @@ int lc_record_count = 0;
 
 int LOCALE_ID = 0;
 
-void AddLC(uint8_t lng_id, uint8_t msg_id, char msg[MSG_LENGTH])
+void AddLC(char lng_id, char msg_id, char msg[MSG_LENGTH])
 {
 	lc_record_count++;
 	lc_array = (lc_record*)realloc(lc_array, lc_record_count * sizeof(lc_record));
@@ -26,7 +26,7 @@ void AddLC(uint8_t lng_id, uint8_t msg_id, char msg[MSG_LENGTH])
 	strcpy(new_value->MSG, msg);
 }
 
-const char* GetLC(uint8_t msg_id)
+const char* GetLC(char msg_id)
 {	
 	char* result = "";
 	for (int i = 0; i < lc_record_count; i++)

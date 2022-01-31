@@ -18,32 +18,32 @@ typedef struct {
 } arguments;
 
 typedef struct {
-	uint8_t day;
-	uint8_t month;
-	uint16_t year;
-	uint8_t hour;
-	uint8_t minute;
-	uint64_t encoded_datetime;
-	int8_t t;
+	char day;
+	char month;
+	short year;
+	char hour;
+	char minute;
+	unsigned long long encoded_datetime;
+	signed char t;
 } sensor;
 
 typedef struct {
 	char file_name[255];
-	uint32_t lines_processed;
-	uint32_t lines_approved;
-	uint32_t lines_rejected;
-	uint64_t min_datetime;
-	uint64_t max_datetime;
+	int lines_processed;
+	int lines_approved;
+	int lines_rejected;
+	unsigned long long min_datetime;
+	unsigned long long max_datetime;
 } readFileResults;
 
 typedef struct {
-	uint8_t month;
-	uint16_t year;	
-	uint32_t encoded_my;
-	uint32_t count;
-	int32_t sum_t;
-	int8_t min_t;
-	int8_t max_t;	
+	char month;
+	short year;	
+	int encoded_my;
+	int count;
+	signed int sum_t;
+	signed char min_t;
+	signed char max_t;	
 	float avg_t;
 } monthReport;
 
@@ -67,11 +67,11 @@ void PrintArguments(arguments* args);
 
 unsigned int DateToInt(sensor* info);
 
-uint64_t EncodeDateTime(uint16_t year, uint8_t month, uint8_t day, 
-	uint8_t hour, uint8_t minute);
+unsigned long long EncodeDateTime(short year, char month, char day, 
+	char hour, char minute);
 
-void DecodeDateTime(uint64_t DateTime, uint16_t* year, uint8_t* month, 
-	uint8_t* day, uint8_t* hour, uint8_t* minute);	
+void DecodeDateTime(unsigned long long DateTime, short* year, char* month, 
+	char* day, char* hour, char* minute);	
 
 void SensorsSwapByIndex(sensor* info, int i, int j);
 
@@ -80,12 +80,12 @@ void SensorsOrderByT(sensor* info, int n);
 void SensorsOrderByDate(sensor* info, int n);
 
 void SensorsAddRecord(sensor** info, int number,
-	uint16_t year, uint8_t month, uint8_t day, 
-	uint8_t hour, uint8_t minute, int8_t t);
+	short year, char month, char day, 
+	char hour, char minute, signed char t);
 
 void SensorsPrint(sensor* info, int number);
 
-uint64_t SensorsEncodeDateTime(sensor* info);
+unsigned long long SensorsEncodeDateTime(sensor* info);
 
 void ReportGetValues(int data_size, sensor* data, arguments app_args, 
 	readFileResults read_file_results);

@@ -30,8 +30,8 @@
 #define MONTH_DEC 22
 
 typedef struct {
-	uint8_t LNG_ID;
-	uint8_t MSG_ID;
+	char LNG_ID;
+	char MSG_ID;
 	char MSG[MSG_LENGTH];
 } lc_record;
 
@@ -41,4 +41,4 @@ void InitLC(int a_lc_id);
 
 void FinalizeLC();
 
-const char* GetLC(uint8_t msg_id);
+const char* GetLC(char msg_id);

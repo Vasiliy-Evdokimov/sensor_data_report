@@ -230,7 +230,7 @@ int ReadFile(char file_name[], int* size, sensor** data, readFileResults* rfr)
 	printf("Loading file \"%s\"...\n", file_name);
 	//
 	int lines_count = 0, lines_error = 0;
-	uint64_t new_dt, min_dt = 0, max_dt = 0;
+	unsigned long long new_dt, min_dt = 0, max_dt = 0;
 	while ((r = fscanf(fp, "%d;%d;%d;%d;%d;%d", 
 						&y, &m, &d, &hh, &mm, &t)) > 0) 
 	{	
@@ -302,9 +302,9 @@ int ReadFile(char file_name[], int* size, sensor** data, readFileResults* rfr)
 
 void PrintReadFileResults(readFileResults* rfr)
 {
-	uint8_t day1, month1, hour1, minute1,
+	char day1, month1, hour1, minute1,
 		day2, month2, hour2, minute2;
-	uint16_t year1, year2;
+	short year1, year2;
 	//
 	DecodeDateTime(rfr->min_datetime, &year1, &month1, &day1, 
 		&hour1, &minute1); 
@@ -403,8 +403,8 @@ void PrintArguments(arguments* args)
 	PrintCharString(DELIMETER_WIDTH, '-', 1);
 }
 
-uint64_t EncodeDateTime(uint16_t year, uint8_t month, uint8_t day, 
-	uint8_t hour, uint8_t minute)
+unsigned long long EncodeDateTime(short year, char month, char day, 
+	char hour, char minute)
 {
 	return (((year * 100ull + 
 				month) * 100 + 
@@ -413,8 +413,8 @@ uint64_t EncodeDateTime(uint16_t year, uint8_t month, uint8_t day,
 							minute;
 }	
 
-void DecodeDateTime(uint64_t DateTime, uint16_t* year, uint8_t* month, 
-	uint8_t* day, uint8_t* hour, uint8_t* minute)
+void DecodeDateTime(unsigned long long DateTime, short* year, char* month, 
+	char* day, char* hour, char* minute)
 {
 	*year = DateTime / (int)pow(10, 8); 
 	*month = (DateTime % (int)pow(10, 8)) / (int)pow(10, 6);
@@ -428,7 +428,7 @@ unsigned int DateToInt(sensor* info)
 	return info->year << 16 | info->month << 8 | info->day;
 }
 
-uint64_t SensorsEncodeDateTime(sensor* info)
+unsigned long long SensorsEncodeDateTime(sensor* info)
 {
 	return 
 		EncodeDateTime(
@@ -466,8 +466,8 @@ void SensorsOrderByDate(sensor* info, int n)
 }
 
 void SensorsAddRecord(sensor** info, int number,
-	uint16_t year, uint8_t month, uint8_t day, 
-	uint8_t hour, uint8_t minute, int8_t t)
+	short year, char month, char day, 
+	char hour, char minute, signed char t)
 {
 	*info = (sensor*)realloc(*info, (number + 1) * sizeof(sensor));
 	if (*info == NULL)
@@ -542,7 +542,7 @@ void MonthsPrint(int months_size, monthReport* months)
 		MonthPrint(&months[i]);
 }
 
-void MonthInit(monthReport** report_month, uint16_t year, uint8_t month, int8_t t)
+void MonthInit(monthReport** report_month, short year, char month, signed char t)
 {
 	monthReport* m = *report_month;
 	m->year = year;
@@ -554,7 +554,7 @@ void MonthInit(monthReport** report_month, uint16_t year, uint8_t month, int8_t 
 	m->max_t = t;	
 }
 
-void MonthProcessNewData(monthReport** report_month, int8_t t)
+void MonthProcessNewData(monthReport** report_month, signed char t)
 {
 	monthReport* m = *report_month;
 	m->count++;
@@ -582,15 +582,15 @@ void MonthOrderByDate(int month_size, monthReport* months)
 				MonthsSwapByIndex(months, i, j);
 }
 
-void PrintReportLine(uint16_t year, uint8_t month, uint16_t count,
-	int8_t min_t, int8_t max_t,	float avg_t)
+void PrintReportLine(short year, char month, short count,
+	signed char min_t, signed char max_t,	float avg_t)
 {
 	printf("%8d | %10s | %8d | %8d | %8d | %10.3f |\n",
 		year,  GetMonthName(month), count, min_t, max_t, avg_t);
 }	
 
 void ReportGetPeriodFromArgs(arguments app_args, 
-	uint64_t* start_date, uint64_t* final_date)
+	unsigned long long* start_date, unsigned long long* final_date)
 {
 	*start_date = 0;
 	*final_date = 0;
@@ -629,7 +629,7 @@ void ReportGetPeriodFromArgs(arguments app_args,
 	}
 }
 
-void ReportPrintTitle(arguments app_args, uint64_t start_date, uint64_t final_date)
+void ReportPrintTitle(arguments app_args, unsigned long long start_date, unsigned long long final_date)
 {
 	if (app_args.year_no && !app_args.month_no && !app_args.year_no2)
 		printf("%d", app_args.year_no);  
@@ -651,8 +651,8 @@ void ReportPrintTitle(arguments app_args, uint64_t start_date, uint64_t final_da
 	if (!app_args.year_no && !app_args.month_no && 
 		!app_args.year_no2 && !app_args.month_no2)
 	{
-		uint16_t y; 
-		uint8_t m, d, hh, mm;
+		short y; 
+		char m, d, hh, mm;
 		DecodeDateTime(start_date, &y, &m, &d, &hh, &mm);
 		printf("%02d.%02d.%04d %02d:%02d - ", d, m, y, hh, mm); 
 		DecodeDateTime(final_date, &y, &m, &d, &hh, &mm);
@@ -669,7 +669,7 @@ void ReportGetValues(int data_size, sensor* data, arguments app_args,
 	int months_count = 0;
 	monthReport* new_month = NULL;
 	//
-	uint64_t start_date, final_date;
+	unsigned long long start_date, final_date;
 	//
 	ReportGetPeriodFromArgs(app_args, &start_date, &final_date);
 	if (!start_date)
