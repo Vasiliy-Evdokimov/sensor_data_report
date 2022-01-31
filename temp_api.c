@@ -187,10 +187,9 @@ int CountFileLines(char file_name[])
 void WriteErrorsFile(const char file_name[], int errors_count, char* errors_array)
 {
 	FILE *fp;
-	fp = fopen(file_name, "w"); 
-	if (fp == NULL)
+	if ((fp = fopen(file_name, "w")) == NULL)
 	{
-		printf("Some problems occurred while opening file \"%s\"!", file_name);
+		printf("Some problems occurred while opening file \"%s\"!\n", file_name);
 		return;
 	}
 	//
@@ -210,11 +209,10 @@ int ReadFile(char file_name[], int* size, sensor** data, readFileResults* rfr)
 	char *errors = NULL;	
 	//
 	FILE *fp;
-	//
-	fp = fopen(file_name, "r");	
-	if (fp == NULL)
+	//		
+	if ((fp = fopen(file_name, "r")) == NULL)
 	{
-		printf("Some problems occurred while opening file \"%s\"!", file_name);
+		printf("Some problems occurred while opening file \"%s\"!\n", file_name);
 		return 0;
 	}	
 	//
