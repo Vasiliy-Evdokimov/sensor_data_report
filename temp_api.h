@@ -1,4 +1,4 @@
-#include <stdint.h>
+//#include <stdint.h>
 
 #define DEBUG
 
@@ -47,31 +47,13 @@ typedef struct {
 	float avg_t;
 } monthReport;
 
-void PrintAppTitle(const char title[]);
-
-int ShowMenu(arguments* args, readFileResults* rfr);
-
-void PrintTime();
-
-void PrintCharString(int count, char fill_char, char next_line);
-
 void PrintReadFileResults(readFileResults* rfr);
 
 int ReadFile(char file_name[], int* size, sensor** data, readFileResults* rfr);
 
-void PrintHelp(char app_name[]);
-
 int ProcessArguments(int argc, char *argv[], arguments* args);
 
 void PrintArguments(arguments* args);
-
-unsigned int DateToInt(sensor* info);
-
-unsigned long long EncodeDateTime(short year, char month, char day, 
-	char hour, char minute);
-
-void DecodeDateTime(unsigned long long DateTime, short* year, char* month, 
-	char* day, char* hour, char* minute);	
 
 void SensorsSwapByIndex(sensor* info, int i, int j);
 

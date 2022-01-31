@@ -2,6 +2,8 @@
 #include <malloc.h>
 #include "temp_api.h"
 #include "localization.h"
+#include "utils.h"
+#include "interface.h"
 
 int main(int argc, char *argv[])
 {
