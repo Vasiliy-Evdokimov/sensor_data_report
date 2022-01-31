@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-#define DEBUG
+//#define DEBUG
 
 #ifdef DEBUG
 	#define DBG if(1)
@@ -47,6 +47,8 @@ typedef struct {
 	float avg_t;
 } monthReport;
 
+void PrintTime();
+
 void PrintCharString(int count, char fill_char);
 
 void PrintReadFileResults(readFileResults* rfr);
@@ -81,7 +83,5 @@ void SensorsPrint(sensor* info, int number);
 
 uint64_t SensorsEncodeDateTime(sensor* info);
 
-void ReportGetHeader(arguments* args);
-	
 void ReportGetValues(int data_size, sensor* data, arguments app_args, 
 	readFileResults read_file_results);

@@ -1,19 +1,7 @@
 #include <stdio.h>
-#include <time.h>
 #include <malloc.h>
 #include "temp_api.h"
 #include "localization.c"
-
-time_t timer;
-struct tm *ptr;
-
-void PrintTime()
-{
-	timer = time(NULL);
-	ptr = localtime(&timer);
-	printf("Now is %02d:%02d:%02d\n", 
-		ptr->tm_hour, ptr->tm_min, ptr->tm_sec);
-}	
 
 int main(int argc, char *argv[])
 {
@@ -31,12 +19,12 @@ int main(int argc, char *argv[])
 	InitLC(app_args.locale_id);
 	DBG printf(GetLC(TEST_MSG));
 	//	
-	PrintArguments(&app_args);	
+	DBG PrintArguments(&app_args);	
 	if (!ReadFile(app_args.file_name, &data_size, &info, &read_file_results))
 		return 1;
 	PrintReadFileResults(&read_file_results);		
 	//
-	SensorsPrint(info, data_size);	
+	//SensorsPrint(info, data_size);	
 	//
 	ReportGetValues(data_size, info, app_args, read_file_results);
 	//

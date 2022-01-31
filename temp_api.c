@@ -1,12 +1,10 @@
 #include <stdio.h>
 #include <stdint.h>
-
 #include <unistd.h>
 #include <stdlib.h>
-
 #include <malloc.h>
-
 #include <math.h>
+#include <time.h>
 
 #include "temp_api.h"
 #include "localization.h"
@@ -15,21 +13,38 @@
 #define CSV_LINE_WIDTH 64
 #define CSV_LINE_SIZE CSV_LINE_WIDTH * sizeof(char)
 
+#define DELIMETER_WIDTH 70
+
 #define PBWIDTH 20
 
 const char error_log_file[] = "error.log";
 
 char PBSTR[PBWIDTH];
 
-const char *months[] = 
-	{"January", "February", "March", "April", 
-	"May", "June", "July", "August", 
-	"September", "October", "November", "December"};
-	
 const int months_days[] = 
 	{31, 28, 31, 30, 
 	31, 30, 31, 31,
 	30, 31, 30, 31};
+	
+const char* GetMonthName(char month_no)
+{
+	switch (month_no) 
+	{
+		case 1:	 return GetLC(MONTH_JAN);
+		case 2:	 return GetLC(MONTH_FEB);
+		case 3:	 return GetLC(MONTH_MAR);
+		case 4:	 return GetLC(MONTH_APR);
+		case 5:	 return GetLC(MONTH_MAY);
+		case 6:	 return GetLC(MONTH_JUN);
+		case 7:	 return GetLC(MONTH_JUL);
+		case 8:	 return GetLC(MONTH_AUG);
+		case 9:	 return GetLC(MONTH_SEP);
+		case 10: return GetLC(MONTH_OCT);
+		case 11: return GetLC(MONTH_NOV);
+		case 12: return GetLC(MONTH_DEC);
+		default: return GetLC(NOT_CHOSEN);	
+	}
+}	
 
 int GetMonthDays(int year, int month)
 {
@@ -42,6 +57,17 @@ int GetMonthDays(int year, int month)
 	else
 		return 28;
 }
+
+void PrintTime()
+{
+	time_t timer;
+	struct tm *ptr;
+	//
+	timer = time(NULL);
+	ptr = localtime(&timer);
+	printf("Now is %02d:%02d:%02d\n", 
+		ptr->tm_hour, ptr->tm_min, ptr->tm_sec);
+}	
 
 void PrintCharString(int count, char fill_char)
 {
@@ -210,7 +236,7 @@ void PrintReadFileResults(readFileResults* rfr)
 	DecodeDateTime(rfr->max_datetime, &year2, &month2, &day2, 
 		&hour2, &minute2);
 	//
-	PrintCharString(40, '-');
+	PrintCharString(DELIMETER_WIDTH, '-');
 	printf("File \"%s\" was successfully loaded!\n", rfr->file_name);
 	printf("%d lines processed, %d approved, %d rejected with errors\n",
 		rfr->lines_processed, rfr->lines_approved, rfr->lines_rejected);
@@ -220,7 +246,7 @@ void PrintReadFileResults(readFileResults* rfr)
 			day1, month1, year1, hour1, minute1);
 	printf("Data final time is %02d.%02d.%04d %02d:%02d\n",
 			day2, month2, year2, hour2, minute2);			
-	PrintCharString(40, '-');		
+	PrintCharString(DELIMETER_WIDTH, '-');		
 }
 
 void PrintHelp(char app_name[])
@@ -235,10 +261,14 @@ void PrintHelp(char app_name[])
 
 int ProcessArguments(int argc, char *argv[], arguments* args)
 {	
+	args->year_no = 0;
+	args->month_no = 0;
+	args->year_no2 = 0;
+	args->month_no2 = 0;
 	args->locale_id = 0;
 	//
 	int res = 0;
-	while ((res = getopt(argc, argv, "hf:y:m:l:")) != -1) 
+	while ((res = getopt(argc, argv, "hf:y:m:a:b:L:")) != -1) 
 	{
 		switch (res) {
 			case 'h':
@@ -253,7 +283,13 @@ int ProcessArguments(int argc, char *argv[], arguments* args)
 			case 'm':
 				args->month_no = atoi(optarg); 
 				break;	
-			case 'l':
+			case 'a':
+				args->year_no2 = atoi(optarg); 			
+				break;	
+			case 'b':
+				args->month_no2 = atoi(optarg); 
+				break;	
+			case 'L':
 				args->locale_id = atoi(optarg); 
 				break;	
 			case '?': 
@@ -267,14 +303,19 @@ int ProcessArguments(int argc, char *argv[], arguments* args)
 
 void PrintArguments(arguments* args)
 {
-	PrintCharString(40, '-');
+	PrintCharString(DELIMETER_WIDTH, '-');
 	printf(GetLC(FILE_IS), args->file_name);
 	printf(GetLC(YEAR_IS), args->year_no); 
 	printf(GetLC(MONTH_IS), 
 		(args->month_no > 0) 
-			? months[args->month_no - 1]
-			: "(not chosen)");
-	PrintCharString(40, '-');
+			? GetMonthName(args->month_no)
+			: GetLC(NOT_CHOSEN));
+	printf(GetLC(YEAR2_IS), args->year_no2); 
+	printf(GetLC(MONTH2_IS), 
+		(args->month_no2 > 0) 
+			? GetMonthName(args->month_no2)
+			: GetLC(NOT_CHOSEN));			
+	PrintCharString(DELIMETER_WIDTH, '-');
 }
 
 uint64_t EncodeDateTime(uint16_t year, uint8_t month, uint8_t day, 
@@ -359,7 +400,6 @@ void SensorsAddRecord(sensor** info, int number,
 	new_value->minute = minute;
 	new_value->encoded_datetime = 
 		SensorsEncodeDateTime(new_value);
-		//EncodeDateTime(year, month, day, hour, minute);
 	new_value->t = t;
 }
 
@@ -378,15 +418,10 @@ void SensorPrint(sensor* item)
 
 void SensorsPrint(sensor* info, int number)
 {
-	PrintCharString(40, '=');
+	PrintCharString(DELIMETER_WIDTH, '=');
 	for (int i = 0; i < number; i++)
 		SensorPrint(&info[i]);
 }
-
-void ReportGetHeader(arguments* args)
-{
-	//
-}	
 
 int MonthReportIndex(int months_count, monthReport* months, 
 	int year_no, int month_no)
@@ -417,7 +452,7 @@ void MonthPrint(monthReport* month)
 
 void MonthsPrint(int months_size, monthReport* months)
 {
-	PrintCharString(40, '=');
+	PrintCharString(DELIMETER_WIDTH, '=');
 	for (int i = 0; i < months_size; i++)
 		MonthPrint(&months[i]);
 }
@@ -465,8 +500,69 @@ void MonthOrderByDate(int month_size, monthReport* months)
 void PrintReportLine(uint16_t year, uint8_t month, uint16_t count,
 	int8_t min_t, int8_t max_t,	float avg_t)
 {
-	printf("%8d %8d %8d %8d %8d %10.3f\n",
-		year, month, count,	min_t, max_t, avg_t);
+	printf("%8d | %10s | %8d | %8d | %8d | %10.3f |\n",
+		year,  GetMonthName(month), count, min_t, max_t, avg_t);
+}	
+
+void ReportGetPeriodFromArgs(arguments app_args, 
+	uint64_t* start_date, uint64_t* final_date)
+{
+	*start_date = 0;
+	*final_date = 0;
+	//
+	if (app_args.year_no && !app_args.month_no && !app_args.year_no2)
+	{
+		*start_date = EncodeDateTime(app_args.year_no, 1, 0, 0, 0);
+		*final_date = EncodeDateTime(app_args.year_no, 12, 31, 23, 59);
+	}	
+	if (app_args.year_no && app_args.month_no && !app_args.year_no2)
+	{		
+		*start_date = EncodeDateTime(app_args.year_no, app_args.month_no, 
+			1, 0, 0);
+		*final_date = EncodeDateTime(app_args.year_no, app_args.month_no, 
+			GetMonthDays(app_args.year_no, app_args.month_no), 23, 59);			
+	}
+	if (app_args.year_no && !app_args.month_no && app_args.year_no2)
+	{		
+		*start_date = EncodeDateTime(app_args.year_no, 1, 0, 0, 0);
+		*final_date = EncodeDateTime(app_args.year_no2, 12, 31, 23, 59);			
+	}
+	if (app_args.year_no && app_args.month_no && 
+		app_args.year_no2 && !app_args.month_no2)
+	{		
+		*start_date = EncodeDateTime(app_args.year_no, app_args.month_no, 
+			1, 0, 0);
+		*final_date = EncodeDateTime(app_args.year_no2, 12, 31, 23, 59);			
+	}
+	if (app_args.year_no && app_args.month_no && 
+		app_args.year_no2 && app_args.month_no2)
+	{		
+		*start_date = EncodeDateTime(app_args.year_no, app_args.month_no, 
+			1, 0, 0);
+		*final_date = EncodeDateTime(app_args.year_no2, app_args.month_no2, 
+			GetMonthDays(app_args.year_no2, app_args.month_no2), 23, 59);		
+	}
+}
+
+void ReportPrintTitle(arguments app_args)
+{
+	if (app_args.year_no && !app_args.month_no && !app_args.year_no2)
+		printf("%d", app_args.year_no);  
+	if (app_args.year_no && app_args.month_no && !app_args.year_no2)
+		printf("%s %d", GetMonthName(app_args.month_no), app_args.year_no);
+	if (app_args.year_no && !app_args.month_no && app_args.year_no2)
+		printf("%d - %d", app_args.year_no, app_args.year_no2);
+	if (app_args.year_no && app_args.month_no && 
+		app_args.year_no2 && !app_args.month_no2)
+		printf("%s %d - %d", 
+			GetMonthName(app_args.month_no), app_args.year_no,
+			app_args.year_no2);
+	if (app_args.year_no && app_args.month_no && 
+		app_args.year_no2 && app_args.month_no2)
+		printf("%s %d - %s %d", 
+			GetMonthName(app_args.month_no), app_args.year_no,
+			GetMonthName(app_args.month_no2), app_args.year_no2);
+	printf("\n");			
 }	
 
 void ReportGetValues(int data_size, sensor* data, arguments app_args, 
@@ -478,8 +574,12 @@ void ReportGetValues(int data_size, sensor* data, arguments app_args,
 	//
 	uint64_t start_date, final_date;
 	//
-	start_date = (app_args.year_no * 100ull + 1) * (int)pow(10, 6);
-	final_date = (app_args.year_no * 100ull + 12) * (int)pow(10, 6);
+	ReportGetPeriodFromArgs(app_args, &start_date, &final_date);
+	if (!start_date)
+		start_date = read_file_results.min_datetime;
+	if (!final_date)
+		final_date = read_file_results.max_datetime;
+	DBG printf("start_date=%llu final_date=%llu\n", start_date, final_date);	
 	//
 	int d_year, d_month, d_t;
 	int current_year = 0;
@@ -521,15 +621,20 @@ void ReportGetValues(int data_size, sensor* data, arguments app_args,
 		MonthProcessNewData(&new_month, d_t);
 	}
 	//
-	//MonthsPrint(months_count, months);
-	//
 	MonthOrderByDate(months_count, months);
 	//
-	MonthsPrint(months_count, months);
+	DBG MonthsPrint(months_count, months);
 	//
-	PrintCharString(40, '+');
-	int count = 0, sum_t = 0, min_t = 0, max_t = 0;	
+	PrintCharString(DELIMETER_WIDTH, '=');
+	printf("\tReport period: ");
+	ReportPrintTitle(app_args);
+	PrintCharString(DELIMETER_WIDTH, '=');
+	//
+	printf("%8s | %10s | %8s | %8s | %8s | %10s |\n",
+		"Year", "Month", "Amount", "Min", "Max", "Avg");
+	PrintCharString(DELIMETER_WIDTH, '-');
 	
+	int count = 0, sum_t = 0, min_t = 0, max_t = 0;	
 	for (int i = 0; i < months_count; i++)
 	{
 		months[i].avg_t = (float)months[i].sum_t / months[i].count;
@@ -554,16 +659,11 @@ void ReportGetValues(int data_size, sensor* data, arguments app_args,
 			months[i].max_t,
 			months[i].avg_t
 		);
-	}
-	PrintReportLine(
-		0,
-		0,
-		count,
-		min_t,
-		max_t,
-		(float)sum_t / count
-	);
-	
+	}	
+	PrintCharString(DELIMETER_WIDTH, '-');
+	printf("%21s | %8d | %8d | %8d | %10.3f |\n",
+		"Total for period", count, min_t, max_t, (float)sum_t / count);	
+	PrintCharString(DELIMETER_WIDTH, '-');	
 	//
 	if (months != NULL) 
 	{		
