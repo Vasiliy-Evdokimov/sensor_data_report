@@ -3,10 +3,10 @@
 #include <stdlib.h>
 
 #include "structs.h"
+#include "arguments.h"
 #include "localization.h"
 #include "utils.h"
 #include "interface.h"
-#include "arguments.h"
 
 int ProcessArguments(int argc, char *argv[], arguments* args)
 {	

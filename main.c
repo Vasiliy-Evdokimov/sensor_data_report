@@ -2,11 +2,11 @@
 #include <malloc.h>
 
 #include "structs.h"
+#include "arguments.h"
 #include "localization.h"
 #include "utils.h"
 #include "interface.h"
 #include "read_file.h"
-#include "arguments.h"
 #include "report.h"
 
 int main(int argc, char *argv[])

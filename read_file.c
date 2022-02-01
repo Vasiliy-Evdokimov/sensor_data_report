@@ -3,6 +3,7 @@
 #include <malloc.h>
 
 #include "structs.h"
+#include "arguments.h"
 #include "localization.h"
 #include "utils.h"
 #include "interface.h"

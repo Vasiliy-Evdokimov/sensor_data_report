@@ -9,14 +9,7 @@
 	#define DBG if(0)
 #endif
 
-typedef struct {
-	char file_name[255];
-	int year_no;
-	char month_no;
-	int year_no2;
-	char month_no2;
-	char locale_id;
-} arguments;
+
 
 typedef struct {
 	char day;

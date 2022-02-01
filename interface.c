@@ -3,10 +3,11 @@
 #include <conio.h>
 
 #include "structs.h"
+#include "arguments.h"
 #include "localization.h"
 #include "utils.h"
-#include "interface.h"
 #include "read_file.h"
+#include "interface.h"
 
 char PBSTR[PBWIDTH];
 
