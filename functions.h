@@ -1,7 +1,7 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-#define DEBUG
+// #define DEBUG
 
 #ifdef DEBUG
 	#define DBG if(1)
@@ -102,7 +102,7 @@ void MonthsSwapByIndex(monthReport* months, int i, int j);
 
 void MonthOrderByDate(int month_size, monthReport* months);
 
-void PrintReportLine(short year, char month, short count,
+void PrintReportLine(short year, char month, int count,
 	signed char min_t, signed char max_t, float avg_t);
 
 void ReportGetPeriodFromArgs(arguments app_args, 

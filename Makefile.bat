@@ -5,5 +5,5 @@ gcc -c -o functions.o functions.c
 gcc -c -o main.o main.c
 gcc -o app main.o localization.o utils.o functions.o
 del /q *.o
-app.exe -f temperature_small.csv -y 2021
+app.exe -f temperature_big.csv -y 2021
 pause

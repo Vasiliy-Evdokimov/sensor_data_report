@@ -28,8 +28,6 @@ int main(int argc, char *argv[])
 		return 1;
 	PrintReadFileResults(&read_file_results);		
 	//
-	//SensorsPrint(info, data_size);	
-	//
 	while (1)
 	{
 		ReportGetValues(data_size, info, app_args, read_file_results);

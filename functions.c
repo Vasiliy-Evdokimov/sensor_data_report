@@ -397,7 +397,7 @@ void MonthOrderByDate(int month_size, monthReport* months)
 				MonthsSwapByIndex(months, i, j);
 }
 
-void PrintReportLine(short year, char month, short count,
+void PrintReportLine(short year, char month, int count,
 	signed char min_t, signed char max_t, float avg_t)
 {
 	printf("%8d | %10s | %8d | %8d | %8d | %10.3f |\n",
@@ -547,7 +547,7 @@ void ReportGetValues(int data_size, sensor* data, arguments app_args,
 		GetLC(REP_YEAR), GetLC(REP_MONTH), GetLC(REP_AMOUNT), 
 		GetLC(REP_MIN), GetLC(REP_MAX), GetLC(REP_AVG));
 	PrintCharString(DELIMETER_WIDTH, '-', 1);
-	
+	//
 	int count = 0, sum_t = 0, min_t = 0, max_t = 0;	
 	for (int i = 0; i < months_count; i++)
 	{
