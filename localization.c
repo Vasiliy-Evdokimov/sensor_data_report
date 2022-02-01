@@ -100,8 +100,5 @@ void InitLC(int a_lc_id)
 void FinalizeLC()
 {
 	if (lc_array != NULL) 
-	{		
 		free(lc_array);
-		//printf("Localization array is released.\n");
-	}	
 }

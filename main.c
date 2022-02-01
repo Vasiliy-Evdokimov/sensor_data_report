@@ -1,14 +1,9 @@
 #include <stdio.h>
 #include <malloc.h>
 
-#include "structs.h"
-#include "arguments.h"
-#include "sensors.h"
-#include "read_file.h"
 #include "localization.h"
 #include "utils.h"
-#include "interface.h"
-#include "report.h"
+#include "functions.h"
 
 int main(int argc, char *argv[])
 {
