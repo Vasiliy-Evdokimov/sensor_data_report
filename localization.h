@@ -1,3 +1,6 @@
+#ifndef LOCALIZATION_H
+#define LOCALIZATION_H
+
 #define MSG_LENGTH 128
 
 #define ENG 0
@@ -40,3 +43,5 @@ void InitLC(int a_lc_id);
 void FinalizeLC();
 
 const char* GetLC(char msg_id);
+
+#endif

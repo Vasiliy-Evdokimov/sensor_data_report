@@ -1,3 +1,6 @@
+#ifndef SENSORS_H
+#define SENSORS_H
+
 unsigned long long SensorsEncodeDateTime(sensor* info);
 
 void SensorsSwapByIndex(sensor* info, int i, int j);
@@ -13,3 +16,5 @@ void SensorsAddRecord(sensor** info, int number,
 void SensorPrint(sensor* item);
 
 void SensorsPrint(sensor* info, int number);
+
+#endif

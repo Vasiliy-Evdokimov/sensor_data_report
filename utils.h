@@ -1,3 +1,6 @@
+#ifndef UTILS_H
+#define UTILS_H
+
 extern const int months_days[];
 	
 const char* GetMonthName(char month_no);
@@ -13,3 +16,5 @@ unsigned long long EncodeDateTime(short year, char month, char day,
 	
 void DecodeDateTime(unsigned long long DateTime, short* year, char* month, 
 	char* day, char* hour, char* minute);
+
+#endif

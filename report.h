@@ -1,3 +1,6 @@
+#ifndef REPORT_H
+#define REPORT_H
+
 int MonthReportIndex(int months_count, monthReport* months, 
 	int year_no, int month_no);
 
@@ -24,3 +27,5 @@ void ReportPrintTitle(arguments app_args, unsigned long long start_date,
 
 void ReportGetValues(int data_size, sensor* data, arguments app_args, 
 	readFileResults read_file_results);
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef INTERFACE_H
+#define INTERFACE_H
+
 #define DELIMETER_WIDTH 70
 #define PBWIDTH 63
 
@@ -10,3 +13,5 @@ void InitProgressBar();
 void PrintProgressBar(double percentage) ;
 
 void PrintHelp(char app_name[]);
+
+#endif

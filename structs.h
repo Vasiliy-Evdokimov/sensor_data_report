@@ -1,3 +1,6 @@
+#ifndef STRUCTS_H
+#define STRUCTS_H
+
 #define DEBUG
 
 #ifdef DEBUG
@@ -44,3 +47,5 @@ typedef struct {
 	signed char max_t;	
 	float avg_t;
 } monthReport;
+
+#endif
