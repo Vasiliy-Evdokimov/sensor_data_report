@@ -23,6 +23,8 @@ char PBSTR[PBWIDTH];
 
 int ProcessArguments(int argc, char *argv[], arguments* args)
 {	
+	strcpy(args->app_name, argv[0]);
+	//
 	args->year_no = 0;
 	args->month_no = 0;
 	args->year_no2 = 0;
@@ -597,7 +599,8 @@ int ShowMenu(arguments* args, readFileResults* rfr)
 		printf("2. %s\n", GetLC(INTF_REP_MY));
 		printf("3. %s\n", GetLC(INTF_REP_PERIOD));
 		printf("4. %s\n", GetLC(SHOW_FILE_INFO));	
-		printf("5. %s\n", GetLC(SWITCH_LOCALE));		
+		printf("5. %s\n", GetLC(SHOW_HELP));	
+		printf("6. %s\n", GetLC(SWITCH_LOCALE));		
 		printf("0. %s\n", GetLC(QUIT));
 		//		
 		int y, m;
@@ -633,8 +636,11 @@ int ShowMenu(arguments* args, readFileResults* rfr)
 				goto OUT;
 			case '4':
 				PrintReadFileResults(rfr);
-				continue;				
+				continue;
 			case '5':
+				PrintHelp(args->app_name);
+				continue;					
+			case '6':
 				args->locale_id = !args->locale_id;
 				LOCALE_ID = args->locale_id; 
 				continue;

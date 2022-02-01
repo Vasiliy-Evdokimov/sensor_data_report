@@ -12,6 +12,7 @@
 // STRUCTURES
 
 typedef struct {
+	char app_name[255];
 	char file_name[255];
 	int year_no;
 	char month_no;

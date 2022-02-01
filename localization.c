@@ -101,6 +101,7 @@ void InitLC(int a_lc_id)
 	AddLC(ENG, INTF_REP_MY, "Report for month.year");	
 	AddLC(ENG, INTF_REP_PERIOD, "Report for period month.year - month.year");	
 	AddLC(ENG, SHOW_FILE_INFO, "Show file info");	
+	AddLC(ENG, SHOW_HELP, "Show help");
 	AddLC(ENG, SWITCH_LOCALE, "Switch localization");	
 	AddLC(ENG, QUIT, "Quit");	
 	//
@@ -148,6 +149,59 @@ void InitLC(int a_lc_id)
 	AddLC(RUS, MONTH_OCT, "Октябрь");
 	AddLC(RUS, MONTH_NOV, "Ноябрь");
 	AddLC(RUS, MONTH_DEC, "Декабрь");	
+	//
+	AddLC(RUS, UNKNOWN_ARGUMENT, "Неизвестный параметр");	
+	AddLC(RUS, TRY_HELP, "Ключ -h для вызова справки");	
+	AddLC(RUS, PROBLEMS_OPEN_FILE, "Возникли ошибки при открытии файла");	
+	AddLC(RUS, RECORDS_PROCESSED, "\r%d записей обработано, %d ошибок найдено");	
+	AddLC(RUS, LINE_ERROR, "Строка %d ОШИБКА! \"%s\"");	
+	AddLC(RUS, LOADING_FILE, "Загрузка файла");	
+	AddLC(RUS, LOADING_COMPLETED, "Загрузка файла завершена!");	
+	//
+	AddLC(RUS, READ_FILE_RESULTS_1, "Файл \"%s\" был успешно загружен!\n");	
+	AddLC(RUS, READ_FILE_RESULTS_2, "%d строк обработано, %d одобрено, %d отклонено с ошибками\n");	
+	AddLC(RUS, SEE_ERROR_FILE, "(файл \"%s\" содержит описания ошибок)\n");	
+	AddLC(RUS, DATA_START_TIME, "Дата начала данных");	
+	AddLC(RUS, DATA_FINAL_TIME, "Дата окончания данных");	
+	//
+	AddLC(RUS, REP_PERIOD, "Отчетный период");	
+	AddLC(RUS, REP_YEAR, "Год");	
+	AddLC(RUS, REP_MONTH, "Месяц");	
+	AddLC(RUS, REP_AMOUNT, "Кол-во");	
+	AddLC(RUS, REP_MIN, "Мин");	
+	AddLC(RUS, REP_MAX, "Макс");	
+	AddLC(RUS, REP_AVG, "Средн");	
+	AddLC(RUS, REP_TOTAL, "Итого за период");	
+	//
+	AddLC(RUS, INTF_CHOOSE_ACTION, "Пожалуйста, выберите действие");	
+	AddLC(RUS, INTF_REP_Y, "Отчет за год");	
+	AddLC(RUS, INTF_REP_MY, "Отчет за месяц.год");	
+	AddLC(RUS, INTF_REP_PERIOD, "Отчет за период месяц.год - месяц.год");	
+	AddLC(RUS, SHOW_FILE_INFO, "Показать информацию о файле");	
+	AddLC(RUS, SHOW_HELP, "Показать справку о программе");	
+	AddLC(RUS, SWITCH_LOCALE, "Переключить язык интерфейса");	
+	AddLC(RUS, QUIT, "Выход");	
+	//
+	AddLC(RUS, YOU_CHOSE, "Вы выбрали");	
+	//
+	AddLC(RUS, MONTH_YEAR, "Месяц.Год");	
+	//
+	AddLC(RUS, HELP_1,  "Эта программа считывает из указанного csv-файла информацию о показаниях датчика температуры и формирует статистический отчет.");	
+	AddLC(RUS, HELP_2,  "Использование: %s -f <имя_файла> [параметры]\n");	
+	AddLC(RUS, HELP_3,  "Параметры");	
+	AddLC(RUS, HELP_4,  "    -h Вызов этой справки");	
+	AddLC(RUS, HELP_5,  "    -f Укажите csv-файл для обработки. Обязательный параметр.");	
+	AddLC(RUS, HELP_6,  "       Пример: %s -f data.csv\n");	
+	AddLC(RUS, HELP_7,  "    -y Укажите год отчета или год начала отчетного периода.");	
+	AddLC(RUS, HELP_8,  "       Пример: %s -f data.csv -y 2020\n");	
+	AddLC(RUS, HELP_9,  "    -m Укажите номер месяца. Параметр Год должен быть обязательо указан.");	
+	AddLC(RUS, HELP_10, "       Пример: %s -f data.csv -y 2020 -m 5\n");	
+	AddLC(RUS, HELP_11, "    -a Укажите конечный год отчетного периода. Год начала периода должен быть обязательно указан.");	
+	AddLC(RUS, HELP_12, "       Пример: %s -f data.csv -y 2020 -a 2021\n");	
+	AddLC(RUS, HELP_13, "    -b Укажите конечный месяц отчетного периода. Годы начала и окончания периода должны быть обязательо указаны.");	
+	AddLC(RUS, HELP_14, "       Пример: %s -f data.csv -y 2020 -m 5 -a 2021 -b 3\n");	
+	AddLC(RUS, HELP_15, "    -L Выбор локализации. 0 для ENG (default), 1 для RUS.");	
+	AddLC(RUS, HELP_16, "       Пример: %s -f data.csv -y 2020 -m 5 -L 1\n");	
 }
 
 void FinalizeLC()
