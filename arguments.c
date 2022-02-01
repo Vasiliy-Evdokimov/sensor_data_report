@@ -4,6 +4,7 @@
 
 #include "structs.h"
 #include "arguments.h"
+#include "sensors.h"
 #include "read_file.h"
 #include "localization.h"
 #include "utils.h"

@@ -4,11 +4,11 @@
 
 #include "structs.h"
 #include "arguments.h"
+#include "sensors.h"
 #include "read_file.h"
 #include "localization.h"
 #include "utils.h"
 #include "interface.h"
-#include "sensors.h"
 
 #define CSV_POSITIONS_COUNT 6
 #define CSV_LINE_WIDTH 64

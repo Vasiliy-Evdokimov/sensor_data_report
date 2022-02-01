@@ -1,6 +1,16 @@
 #ifndef SENSORS_H
 #define SENSORS_H
 
+typedef struct {
+	char day;
+	char month;
+	short year;
+	char hour;
+	char minute;
+	unsigned long long encoded_datetime;
+	signed char t;
+} sensor;
+
 unsigned long long SensorsEncodeDateTime(sensor* info);
 
 void SensorsSwapByIndex(sensor* info, int i, int j);

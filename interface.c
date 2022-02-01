@@ -6,6 +6,7 @@
 #include "arguments.h"
 #include "localization.h"
 #include "utils.h"
+#include "sensors.h"
 #include "read_file.h"
 #include "interface.h"
 

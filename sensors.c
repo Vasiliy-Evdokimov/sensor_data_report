@@ -3,11 +3,11 @@
 
 #include "structs.h"
 #include "arguments.h"
+#include "sensors.h"
 #include "read_file.h"
 #include "localization.h"
 #include "utils.h"
 #include "interface.h"
-#include "sensors.h"
 
 unsigned long long SensorsEncodeDateTime(sensor* info)
 {
