@@ -9,8 +9,6 @@
 	#define DBG if(0)
 #endif
 
-
-
 typedef struct {
 	char day;
 	char month;
@@ -20,15 +18,6 @@ typedef struct {
 	unsigned long long encoded_datetime;
 	signed char t;
 } sensor;
-
-typedef struct {
-	char file_name[255];
-	int lines_processed;
-	int lines_approved;
-	int lines_rejected;
-	unsigned long long min_datetime;
-	unsigned long long max_datetime;
-} readFileResults;
 
 typedef struct {
 	char month;

@@ -3,10 +3,10 @@
 
 #include "structs.h"
 #include "arguments.h"
+#include "read_file.h"
 #include "localization.h"
 #include "utils.h"
 #include "interface.h"
-#include "read_file.h"
 #include "report.h"
 
 int main(int argc, char *argv[])

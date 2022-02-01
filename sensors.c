@@ -3,6 +3,7 @@
 
 #include "structs.h"
 #include "arguments.h"
+#include "read_file.h"
 #include "localization.h"
 #include "utils.h"
 #include "interface.h"
