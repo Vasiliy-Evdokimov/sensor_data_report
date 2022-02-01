@@ -55,8 +55,8 @@ int ProcessArguments(int argc, char *argv[], arguments* args)
 				args->locale_id = atoi(optarg); 
 				break;	
 			case '?': 
-				printf("Unknown argument: %s ", argv[optind - 1]);
-				printf("Try -h for help\n");
+				printf("%s: %s ", GetLC(UNKNOWN_ARGUMENT), argv[optind - 1]);
+				printf("%s\n", GetLC(TRY_HELP));
                 return 0;
 		}
 	}
@@ -104,7 +104,7 @@ void WriteErrorsFile(const char file_name[], int errors_count, char* errors_arra
 	FILE *fp;
 	if ((fp = fopen(file_name, "w")) == NULL)
 	{
-		printf("Some problems occurred while opening file \"%s\"!\n", file_name);
+		printf("%s \"%s\"!\n", GetLC(PROBLEMS_OPEN_FILE), file_name);
 		return;
 	}
 	//
@@ -116,7 +116,6 @@ void WriteErrorsFile(const char file_name[], int errors_count, char* errors_arra
 
 int ReadFile(char file_name[], int* size, sensor** data, readFileResults* rfr)
 {
-	const char status_format[] = "\r%d records processed, %d errors found";
 	const char show_status = 1;
 	const char show_bar = 1;
 	const int status_step = 10000;
@@ -127,7 +126,7 @@ int ReadFile(char file_name[], int* size, sensor** data, readFileResults* rfr)
 	//		
 	if ((fp = fopen(file_name, "r")) == NULL)
 	{
-		printf("Some problems occurred while opening file \"%s\"!\n", file_name);
+		printf("%s \"%s\"!\n", GetLC(PROBLEMS_OPEN_FILE), file_name);
 		return 0;
 	}	
 	//
@@ -141,7 +140,7 @@ int ReadFile(char file_name[], int* size, sensor** data, readFileResults* rfr)
 	int y, m, d, hh, mm, t, r;
 	char s[CSV_LINE_WIDTH];
 	//
-	printf("Loading file \"%s\"...\n", file_name);
+	printf("%s \"%s\"...\n", GetLC(LOADING_FILE), file_name);
 	//
 	int lines_count = 0, lines_error = 0;
 	unsigned long long new_dt, min_dt = 0, max_dt = 0;
@@ -156,7 +155,7 @@ int ReadFile(char file_name[], int* size, sensor** data, readFileResults* rfr)
 			//
 			errors = (char*)realloc(errors, lines_error * CSV_LINE_SIZE);
 			sprintf(errors + (lines_error - 1) * CSV_LINE_SIZE, 
-				"Line %d ERROR! \"%s\"", lines_count, s);
+				GetLC(LINE_ERROR), lines_count, s);
 			s[0] = '\0';	
 		} else {
 			SensorsAddRecord(data, (*size)++, y, m, d, hh, mm, t); 
@@ -177,7 +176,7 @@ int ReadFile(char file_name[], int* size, sensor** data, readFileResults* rfr)
 		{	
 			(show_bar)
 				? PrintProgressBar((float)lines_count / file_lines_count)
-				: printf(status_format, lines_count, lines_error);
+				: printf(GetLC(RECORDS_PROCESSED), lines_count, lines_error);
 		}		
 	}
 	if (show_status) 
@@ -186,12 +185,12 @@ int ReadFile(char file_name[], int* size, sensor** data, readFileResults* rfr)
 		{
 			PrintProgressBar(1.0);
 		} else {
-			printf(status_format, lines_count, lines_error);
+			printf(GetLC(RECORDS_PROCESSED), lines_count, lines_error);
 		}				
 	}
 	printf("\n");
 	//
-	printf("File loading completed!\n");
+	printf("%s\n", GetLC(LOADING_COMPLETED));
 	//
 	if ((lines_error > 0) && (errors != NULL))
 		WriteErrorsFile(error_log_file, lines_error, errors);
@@ -226,14 +225,14 @@ void PrintReadFileResults(readFileResults* rfr)
 		&hour2, &minute2);
 	//
 	PrintCharString(DELIMETER_WIDTH, '-', 1);
-	printf("File \"%s\" was successfully loaded!\n", rfr->file_name);
-	printf("%d lines processed, %d approved, %d rejected with errors\n",
+	printf(GetLC(READ_FILE_RESULTS_1), rfr->file_name);
+	printf(GetLC(READ_FILE_RESULTS_2),
 		rfr->lines_processed, rfr->lines_approved, rfr->lines_rejected);
 	if (rfr->lines_rejected)
-			printf("(see \"%s\" file for errors details)\n", error_log_file);
-	printf("Data start time is %02d.%02d.%04d %02d:%02d\n",
+			printf(GetLC(SEE_ERROR_FILE), error_log_file);
+	printf("%s %02d.%02d.%04d %02d:%02d\n", GetLC(DATA_START_TIME),
 			day1, month1, year1, hour1, minute1);
-	printf("Data final time is %02d.%02d.%04d %02d:%02d\n",
+	printf("%s %02d.%02d.%04d %02d:%02d\n", GetLC(DATA_FINAL_TIME),	
 			day2, month2, year2, hour2, minute2);			
 	PrintCharString(DELIMETER_WIDTH, '-', 1);		
 }
@@ -284,7 +283,7 @@ void SensorsAddRecord(sensor** info, int number,
 	*info = (sensor*)realloc(*info, (number + 1) * sizeof(sensor));
 	if (*info == NULL)
 	{	
-		printf("Memory not allocated.\n");
+		DBG printf("Memory not allocated.\n");
 		return;
 	}        
 	//
@@ -517,7 +516,7 @@ void ReportGetValues(int data_size, sensor* data, arguments app_args,
 				months = (monthReport*)realloc(months, months_count * sizeof(monthReport));
 				if (months == NULL)
 				{	
-					printf("Memory not allocated.\n");
+					DBG printf("Memory not allocated.\n");
 					return;
 				}  
 				new_month = months + months_count - 1;
@@ -538,12 +537,13 @@ void ReportGetValues(int data_size, sensor* data, arguments app_args,
 	DBG MonthsPrint(months_count, months);
 	//
 	PrintCharString(DELIMETER_WIDTH, '=', 1);
-	printf("\tReport period: ");
+	printf("\t%s: ", GetLC(REP_PERIOD));
 	ReportPrintTitle(app_args, start_date, final_date);
 	PrintCharString(DELIMETER_WIDTH, '=', 1);
 	//
 	printf("%8s | %10s | %8s | %8s | %8s | %10s |\n",
-		"Year", "Month", "Amount", "Min", "Max", "Avg");
+		GetLC(REP_YEAR), GetLC(REP_MONTH), GetLC(REP_AMOUNT), 
+		GetLC(REP_MIN), GetLC(REP_MAX), GetLC(REP_AVG));
 	PrintCharString(DELIMETER_WIDTH, '-', 1);
 	
 	int count = 0, sum_t = 0, min_t = 0, max_t = 0;	
@@ -574,7 +574,7 @@ void ReportGetValues(int data_size, sensor* data, arguments app_args,
 	}	
 	PrintCharString(DELIMETER_WIDTH, '-', 1);
 	printf("%21s | %8d | %8d | %8d | %10.3f |\n",
-		"Total for period", count, min_t, max_t, (float)sum_t / count);	
+		GetLC(REP_TOTAL), count, min_t, max_t, (float)sum_t / count);	
 	PrintCharString(DELIMETER_WIDTH, '-', 1);	
 	//
 	if (months != NULL) 
@@ -592,21 +592,21 @@ int ShowMenu(arguments* args, readFileResults* rfr)
 	//
 	while(1)
 	{
-		printf("Please choose the action:\n");
-		printf("1. Report for year\n");
-		printf("2. Report for month.year\n");
-		printf("3. Report for period month.year - month.year\n");
-		printf("4. Show file info\n");	
-		printf("5. Switch localization\n");		
-		printf("0. Quit\n");
+		printf("%s:\n", GetLC(INTF_CHOOSE_ACTION));
+		printf("1. %s\n", GetLC(INTF_REP_Y));
+		printf("2. %s\n", GetLC(INTF_REP_MY));
+		printf("3. %s\n", GetLC(INTF_REP_PERIOD));
+		printf("4. %s\n", GetLC(SHOW_FILE_INFO));	
+		printf("5. %s\n", GetLC(SWITCH_LOCALE));		
+		printf("0. %s\n", GetLC(QUIT));
 		//		
 		int y, m;
 		choice = getch();
 		if ((int)choice != 13)
-			printf("You choose (%c)\n", choice);	
+			printf("%s (%c)\n", GetLC(YOU_CHOSE), choice);	
 		switch (choice) {
 			case '1':				
-				printf("Year: ");
+				printf("%s: ", GetLC(REP_YEAR));
 				scanf("%d", &y);
 				args->year_no = y;  
 				args->month_no = 0;
@@ -614,7 +614,7 @@ int ShowMenu(arguments* args, readFileResults* rfr)
 				args->month_no2 = 0;	
 				goto OUT;
 			case '2':
-				printf("Month.Year: ");
+				printf("%s: ", GetLC(MONTH_YEAR));
 				scanf("%d.%d", &m, &y);
 				args->year_no = y;  
 				args->month_no = m;
@@ -622,11 +622,11 @@ int ShowMenu(arguments* args, readFileResults* rfr)
 				args->month_no2 = 0;			
 				goto OUT;
 			case '3':
-				printf("Month.Year #1: ");
+				printf("%s #1: ", GetLC(MONTH_YEAR));
 				scanf("%d.%d", &m, &y);
 				args->year_no = y;  
 				args->month_no = m;
-				printf("Month.Year #2: ");
+				printf("%s #2: ", GetLC(MONTH_YEAR));
 				scanf("%d.%d", &m, &y);
 				args->year_no2 = y;  
 				args->month_no2 = m;
@@ -679,20 +679,20 @@ void PrintProgressBar(double percentage)
 
 void PrintHelp(char app_name[])
 {
-	printf("This application reads specified csv-file containing temperature sensor data and forms statistics report.\n");
-	printf("Usage: %s -f <file_name> [options]\n", app_name);
-	printf("Options:\n"); 
-	printf("    -h This help text\n"); 
-	printf("    -f Specify corresponding csv-file. Option is required.\n");
-	printf("       Example: %s -f data.csv\n", app_name);
-	printf("    -y Specify year of report or start year of report period.\n");
-	printf("       Example: %s -f data.csv -y 2020\n", app_name);
-	printf("    -m Specify month number. The year option is required.\n");
-	printf("       Example: %s -f data.csv -y 2020 -m 5\n", app_name);
-	printf("    -a Specify final year of report period. Start year option is required.\n");
-	printf("       Example: %s -f data.csv -y 2020 -a 2021\n", app_name);
-	printf("    -b Specify final month of report period. The start and final year options are required.\n");
-	printf("       Example: %s -f data.csv -y 2020 -m 5 -a 2021 -b 3\n", app_name);
-	printf("    -L Specify localization. 0 for ENG (default), 1 for RUS.\n");
-	printf("       Example: %s -f data.csv -y 2020 -m 5 -L 1\n", app_name);	
+	printf("%s\n", GetLC(HELP_1));
+	printf(GetLC(HELP_2), app_name);
+	printf("%s:\n", GetLC(HELP_3)); 
+	printf("%s\n", GetLC(HELP_4)); 
+	printf("%s\n", GetLC(HELP_5));
+	printf(GetLC(HELP_6), app_name);
+	printf("%s\n", GetLC(HELP_7));
+	printf(GetLC(HELP_8), app_name);
+	printf("%s\n", GetLC(HELP_9));
+	printf(GetLC(HELP_10), app_name);
+	printf("%s\n", GetLC(HELP_11));
+	printf(GetLC(HELP_12), app_name);
+	printf("%s\n", GetLC(HELP_13));
+	printf(GetLC(HELP_14), app_name);
+	printf("%s\n", GetLC(HELP_15));
+	printf(GetLC(HELP_16), app_name);	
 }
