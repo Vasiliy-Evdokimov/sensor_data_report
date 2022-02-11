@@ -400,7 +400,7 @@ void MonthOrderByDate(int month_size, monthReport* months)
 void PrintReportLine(short year, char month, int count,
 	signed char min_t, signed char max_t, float avg_t)
 {
-	printf("%8d | %10s | %8d | %8d | %8d | %10.3f |\n",
+	printf("%8d | %10s | %8d | %8d | %8d | %10.1f |\n",
 		year,  GetMonthName(month), count, min_t, max_t, avg_t);
 }	
 
@@ -575,7 +575,7 @@ void ReportGetValues(int data_size, sensor* data, arguments app_args,
 		);
 	}	
 	PrintCharString(DELIMETER_WIDTH, '-', 1);
-	printf("%21s | %8d | %8d | %8d | %10.3f |\n",
+	printf("%21s | %8d | %8d | %8d | %10.1f |\n",
 		GetLC(REP_TOTAL), count, min_t, max_t, (float)sum_t / count);	
 	PrintCharString(DELIMETER_WIDTH, '-', 1);	
 	//
