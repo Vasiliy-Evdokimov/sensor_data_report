@@ -1,7 +1,7 @@
 #ifndef LOCALIZATION_H
 #define LOCALIZATION_H
 
-#define MSG_LENGTH 128
+#define MSG_LENGTH 2048
 
 #define ENG 0
 #define RUS 1
@@ -67,22 +67,7 @@
 
 #define MONTH_YEAR			51
 
-#define HELP_1				52
-#define HELP_2				53
-#define HELP_3				54
-#define HELP_4				55
-#define HELP_5				56
-#define HELP_6				57
-#define HELP_7				58
-#define HELP_8				59
-#define HELP_9				60
-#define HELP_10				61
-#define HELP_11				62
-#define HELP_12				63
-#define HELP_13				64
-#define HELP_14				65
-#define HELP_15				66
-#define HELP_16				67
+#define HELP				52
 
 typedef struct {
 	char LNG_ID;
@@ -92,7 +77,7 @@ typedef struct {
 
 extern int LOCALE_ID;
 
-void InitLC(int a_lc_id);
+void InitLC(int a_lc_id, char a_app_name[]);
 
 void FinalizeLC();
 

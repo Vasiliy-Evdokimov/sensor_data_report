@@ -9,6 +9,29 @@ lc_record* lc_array = NULL;
 int lc_record_count = 0;
 
 int LOCALE_ID = 0;
+char APP_NAME[255];
+
+void str_replace(char *string, char *find, char *replace, char *result) 
+{
+    int string_len = strlen(string);
+    int find_len = strlen(find);
+    int replace_len = strlen(replace);
+    char buf[find_len + 1];    
+    int i = 0, res_pos = 0;
+    while (i < string_len)
+    {	
+		strncpy(buf, &string[i], find_len);
+		buf[find_len] = '\0';
+		// 			
+		if (!strcmp(find, buf)) {
+			strcpy(&result[res_pos], replace);
+			res_pos += replace_len;
+			i += find_len; 			
+		} else
+			result[res_pos++] = string[i++];
+		result[res_pos] = '\0';						
+	}
+}
 
 void AddLC(char lng_id, char msg_id, char msg[MSG_LENGTH])
 {
@@ -42,11 +65,14 @@ const char* GetLC(char msg_id)
 	return result;
 }
 
-void InitLC(int a_lc_id)
+void InitLC(int a_lc_id, char a_app_name[])
 {
 	setlocale(0, "");
 	//
 	LOCALE_ID = a_lc_id;
+	strcpy(APP_NAME, a_app_name); 
+	//
+	char buf[MSG_LENGTH];
 	//
 	AddLC(ENG, TEST_MSG, "ENG ENG ENG\n");
 	AddLC(RUS, TEST_MSG, "РУС РУС РУС\n");
@@ -109,22 +135,26 @@ void InitLC(int a_lc_id)
 	//
 	AddLC(ENG, MONTH_YEAR, "Month.Year");	
 	//
-	AddLC(ENG, HELP_1,  "This application reads specified csv-file containing temperature sensor data and forms statistics report.");	
-	AddLC(ENG, HELP_2,  "Usage: %s -f <file_name> [options]\n");	
-	AddLC(ENG, HELP_3,  "Options");	
-	AddLC(ENG, HELP_4,  "    -h This help text");	
-	AddLC(ENG, HELP_5,  "    -f Specify corresponding csv-file. Option is required.");	
-	AddLC(ENG, HELP_6,  "       Example: %s -f data.csv\n");	
-	AddLC(ENG, HELP_7,  "    -y Specify year of report or start year of report period.");	
-	AddLC(ENG, HELP_8,  "       Example: %s -f data.csv -y 2020\n");	
-	AddLC(ENG, HELP_9,  "    -m Specify month number. The year option is required.");	
-	AddLC(ENG, HELP_10, "       Example: %s -f data.csv -y 2020 -m 5\n");	
-	AddLC(ENG, HELP_11, "    -a Specify final year of report period. Start year option is required.");	
-	AddLC(ENG, HELP_12, "       Example: %s -f data.csv -y 2020 -a 2021\n");	
-	AddLC(ENG, HELP_13, "    -b Specify final month of report period. The start and final year options are required.");	
-	AddLC(ENG, HELP_14, "       Example: %s -f data.csv -y 2020 -m 5 -a 2021 -b 3\n");	
-	AddLC(ENG, HELP_15, "    -L Specify localization. 0 for ENG (default), 1 for RUS.");	
-	AddLC(ENG, HELP_16, "       Example: %s -f data.csv -y 2020 -m 5 -L 1\n");	
+	str_replace(
+		"This application reads specified csv-file containing temperature sensor data and forms statistics report.\n"	
+		"Usage: %app_name% -f <file_name> [options]\n"	
+		"Options:\n"	
+		"    -h This help text\n"
+		"    -f Specify corresponding csv-file. Option is required.\n"	
+		"       Example: %app_name% -f data.csv\n"	
+		"    -y Specify year of report or start year of report period.\n"	
+		"       Example: %app_name% -f data.csv -y 2020\n"	
+		"    -m Specify month number. The year option is required.\n"	
+		"       Example: %app_name% -f data.csv -y 2020 -m 5\n"	
+		"    -a Specify final year of report period. Start year option is required.\n"	
+		"       Example: %app_name% -f data.csv -y 2020 -a 2021\n"	
+		"    -b Specify final month of report period. The start and final year options are required.\n"	
+		"       Example: %app_name% -f data.csv -y 2020 -m 5 -a 2021 -b 3\n"	
+		"    -L Specify localization. 0 for ENG (default), 1 for RUS.\n"	
+		"       Example: %app_name% -f data.csv -y 2020 -m 5 -L 1\n",
+		"%app_name%", APP_NAME, buf
+	);
+	AddLC(ENG, HELP, buf);  	
 	//
 	//
 	//
@@ -186,22 +216,26 @@ void InitLC(int a_lc_id)
 	//
 	AddLC(RUS, MONTH_YEAR, "Месяц.Год");	
 	//
-	AddLC(RUS, HELP_1,  "Эта программа считывает из указанного csv-файла информацию о показаниях датчика температуры и формирует статистический отчет.");	
-	AddLC(RUS, HELP_2,  "Использование: %s -f <имя_файла> [параметры]\n");	
-	AddLC(RUS, HELP_3,  "Параметры");	
-	AddLC(RUS, HELP_4,  "    -h Вызов этой справки");	
-	AddLC(RUS, HELP_5,  "    -f Укажите csv-файл для обработки. Обязательный параметр.");	
-	AddLC(RUS, HELP_6,  "       Пример: %s -f data.csv\n");	
-	AddLC(RUS, HELP_7,  "    -y Укажите год отчета или год начала отчетного периода.");	
-	AddLC(RUS, HELP_8,  "       Пример: %s -f data.csv -y 2020\n");	
-	AddLC(RUS, HELP_9,  "    -m Укажите номер месяца. Параметр Год должен быть обязательо указан.");	
-	AddLC(RUS, HELP_10, "       Пример: %s -f data.csv -y 2020 -m 5\n");	
-	AddLC(RUS, HELP_11, "    -a Укажите конечный год отчетного периода. Год начала периода должен быть обязательно указан.");	
-	AddLC(RUS, HELP_12, "       Пример: %s -f data.csv -y 2020 -a 2021\n");	
-	AddLC(RUS, HELP_13, "    -b Укажите конечный месяц отчетного периода. Годы начала и окончания периода должны быть обязательо указаны.");	
-	AddLC(RUS, HELP_14, "       Пример: %s -f data.csv -y 2020 -m 5 -a 2021 -b 3\n");	
-	AddLC(RUS, HELP_15, "    -L Выбор локализации. 0 для ENG (default), 1 для RUS.");	
-	AddLC(RUS, HELP_16, "       Пример: %s -f data.csv -y 2020 -m 5 -L 1\n");	
+	str_replace(
+		"Эта программа считывает из указанного csv-файла информацию о показаниях датчика температуры и формирует статистический отчет.\n"	
+		"Использование: %app_name% -f <имя_файла> [параметры]\n"	
+		"Параметры:\n"
+		"    -h Вызов этой справки\n"	
+		"    -f Укажите csv-файл для обработки. Обязательный параметр.\n"	
+		"       Пример: %app_name% -f data.csv\n"	
+		"    -y Укажите год отчета или год начала отчетного периода.\n"	
+		"       Пример: %app_name% -f data.csv -y 2020\n"	
+		"    -m Укажите номер месяца. Параметр Год должен быть обязательо указан.\n"	
+		"       Пример: %app_name% -f data.csv -y 2020 -m 5\n"	
+		"    -a Укажите конечный год отчетного периода. Год начала периода должен быть обязательно указан.\n"	
+		"       Пример: %app_name% -f data.csv -y 2020 -a 2021\n"	
+		"    -b Укажите конечный месяц отчетного периода. Годы начала и окончания периода должны быть обязательо указаны.\n"	
+		"       Пример: %app_name% -f data.csv -y 2020 -m 5 -a 2021 -b 3\n"	
+		"    -L Выбор локализации. 0 для ENG (default), 1 для RUS.\n"	
+		"       Пример: %app_name% -f data.csv -y 2020 -m 5 -L 1\n",
+		"%app_name%", APP_NAME, buf
+	);
+	AddLC(RUS, HELP, buf);  
 }
 
 void FinalizeLC()

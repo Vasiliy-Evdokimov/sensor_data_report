@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 	if (!ProcessArguments(argc, argv, &app_args))
 		return 1;	
 	//
-	InitLC(app_args.locale_id);
+	InitLC(app_args.locale_id, app_args.app_name);
 	DBG printf(GetLC(TEST_MSG));
 	//
 	PrintAppTitle(GetLC(APP_TITLE));

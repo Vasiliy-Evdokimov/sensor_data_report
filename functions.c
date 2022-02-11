@@ -685,20 +685,5 @@ void PrintProgressBar(double percentage)
 
 void PrintHelp(char app_name[])
 {
-	printf("%s\n", GetLC(HELP_1));
-	printf(GetLC(HELP_2), app_name);
-	printf("%s:\n", GetLC(HELP_3)); 
-	printf("%s\n", GetLC(HELP_4)); 
-	printf("%s\n", GetLC(HELP_5));
-	printf(GetLC(HELP_6), app_name);
-	printf("%s\n", GetLC(HELP_7));
-	printf(GetLC(HELP_8), app_name);
-	printf("%s\n", GetLC(HELP_9));
-	printf(GetLC(HELP_10), app_name);
-	printf("%s\n", GetLC(HELP_11));
-	printf(GetLC(HELP_12), app_name);
-	printf("%s\n", GetLC(HELP_13));
-	printf(GetLC(HELP_14), app_name);
-	printf("%s\n", GetLC(HELP_15));
-	printf(GetLC(HELP_16), app_name);	
+	printf("%s", GetLC(HELP));
 }
