@@ -12,22 +12,10 @@ const int months_days[] =
 
 const char* GetMonthName(char month_no)
 {
-	switch (month_no) 
-	{
-		case 1:	 return GetLC(MONTH_JAN);
-		case 2:	 return GetLC(MONTH_FEB);
-		case 3:	 return GetLC(MONTH_MAR);
-		case 4:	 return GetLC(MONTH_APR);
-		case 5:	 return GetLC(MONTH_MAY);
-		case 6:	 return GetLC(MONTH_JUN);
-		case 7:	 return GetLC(MONTH_JUL);
-		case 8:	 return GetLC(MONTH_AUG);
-		case 9:	 return GetLC(MONTH_SEP);
-		case 10: return GetLC(MONTH_OCT);
-		case 11: return GetLC(MONTH_NOV);
-		case 12: return GetLC(MONTH_DEC);
-		default: return GetLC(NOT_CHOSEN);	
-	}
+	if ((month_no >= 1) && (month_no <= 12))
+		GetLC(MONTH_JAN + month_no - 1);
+	else 
+		return GetLC(NOT_CHOSEN);
 }	
 
 int GetMonthDays(int year, int month)
