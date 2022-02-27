@@ -75,7 +75,7 @@ void InitLC(int a_lc_id, char a_app_name[])
 	char buf[MSG_LENGTH];
 	//
 	AddLC(ENG, TEST_MSG, "ENG ENG ENG\n");
-	AddLC(RUS, TEST_MSG, "РУС РУС РУС\n");
+	AddLC(RUS, TEST_MSG, "Р РЈРЎ Р РЈРЎ Р РЈРЎ\n");
 	//
 	AddLC(ENG, APP_TITLE, "..:: TEMPERATURE SENSOR REPORT ::..");
 	//
@@ -158,81 +158,81 @@ void InitLC(int a_lc_id, char a_app_name[])
 	//
 	//
 	//
-	AddLC(RUS, APP_TITLE, "..:: ОТЧЕТ ПО ДАТЧИКУ ТЕМПЕРАТУРЫ ::..");
+	AddLC(RUS, APP_TITLE, "..:: РћРўР§Р•Рў РџРћ Р”РђРўР§РРљРЈ РўР•РњРџР•Р РђРўРЈР Р« ::..");
 	//
-	AddLC(RUS, FILE_IS, "Файл \"%s\".\n");
-	AddLC(RUS, YEAR_IS, "Год %d.\n");
-	AddLC(RUS, MONTH_IS, "Месяц %s.\n");
-	AddLC(RUS, YEAR2_IS, "Год2 %d.\n");
-	AddLC(RUS, MONTH2_IS, "Месяц2 %s.\n");
-	AddLC(RUS, NOT_CHOSEN, "(не выбран)");
+	AddLC(RUS, FILE_IS, "Р¤Р°Р№Р» \"%s\".\n");
+	AddLC(RUS, YEAR_IS, "Р“РѕРґ %d.\n");
+	AddLC(RUS, MONTH_IS, "РњРµСЃСЏС† %s.\n");
+	AddLC(RUS, YEAR2_IS, "Р“РѕРґ2 %d.\n");
+	AddLC(RUS, MONTH2_IS, "РњРµСЃСЏС†2 %s.\n");
+	AddLC(RUS, NOT_CHOSEN, "(РЅРµ РІС‹Р±СЂР°РЅ)");
 	//
-	AddLC(RUS, MONTH_JAN, "Январь");
-	AddLC(RUS, MONTH_FEB, "Февраль");
-	AddLC(RUS, MONTH_MAR, "Март");
-	AddLC(RUS, MONTH_APR, "Апрель");
-	AddLC(RUS, MONTH_MAY, "Май");
-	AddLC(RUS, MONTH_JUN, "Июнь");
-	AddLC(RUS, MONTH_JUL, "Июль");
-	AddLC(RUS, MONTH_AUG, "Август");
-	AddLC(RUS, MONTH_SEP, "Сентябрь");
-	AddLC(RUS, MONTH_OCT, "Октябрь");
-	AddLC(RUS, MONTH_NOV, "Ноябрь");
-	AddLC(RUS, MONTH_DEC, "Декабрь");	
+	AddLC(RUS, MONTH_JAN, "РЇРЅРІР°СЂСЊ");
+	AddLC(RUS, MONTH_FEB, "Р¤РµРІСЂР°Р»СЊ");
+	AddLC(RUS, MONTH_MAR, "РњР°СЂС‚");
+	AddLC(RUS, MONTH_APR, "РђРїСЂРµР»СЊ");
+	AddLC(RUS, MONTH_MAY, "РњР°Р№");
+	AddLC(RUS, MONTH_JUN, "РСЋРЅСЊ");
+	AddLC(RUS, MONTH_JUL, "РСЋР»СЊ");
+	AddLC(RUS, MONTH_AUG, "РђРІРіСѓСЃС‚");
+	AddLC(RUS, MONTH_SEP, "РЎРµРЅС‚СЏР±СЂСЊ");
+	AddLC(RUS, MONTH_OCT, "РћРєС‚СЏР±СЂСЊ");
+	AddLC(RUS, MONTH_NOV, "РќРѕСЏР±СЂСЊ");
+	AddLC(RUS, MONTH_DEC, "Р”РµРєР°Р±СЂСЊ");	
 	//
-	AddLC(RUS, UNKNOWN_ARGUMENT, "Неизвестный параметр");	
-	AddLC(RUS, TRY_HELP, "Ключ -h для вызова справки");	
-	AddLC(RUS, PROBLEMS_OPEN_FILE, "Возникли ошибки при открытии файла");	
-	AddLC(RUS, RECORDS_PROCESSED, "\r%d записей обработано, %d ошибок найдено");	
-	AddLC(RUS, LINE_ERROR, "Строка %d ОШИБКА! \"%s\"");	
-	AddLC(RUS, LOADING_FILE, "Загрузка файла");	
-	AddLC(RUS, LOADING_COMPLETED, "Загрузка файла завершена!");	
+	AddLC(RUS, UNKNOWN_ARGUMENT, "РќРµРёР·РІРµСЃС‚РЅС‹Р№ РїР°СЂР°РјРµС‚СЂ");	
+	AddLC(RUS, TRY_HELP, "РљР»СЋС‡ -h РґР»СЏ РІС‹Р·РѕРІР° СЃРїСЂР°РІРєРё");	
+	AddLC(RUS, PROBLEMS_OPEN_FILE, "Р’РѕР·РЅРёРєР»Рё РѕС€РёР±РєРё РїСЂРё РѕС‚РєСЂС‹С‚РёРё С„Р°Р№Р»Р°");	
+	AddLC(RUS, RECORDS_PROCESSED, "\r%d Р·Р°РїРёСЃРµР№ РѕР±СЂР°Р±РѕС‚Р°РЅРѕ, %d РѕС€РёР±РѕРє РЅР°Р№РґРµРЅРѕ");	
+	AddLC(RUS, LINE_ERROR, "РЎС‚СЂРѕРєР° %d РћРЁРР‘РљРђ! \"%s\"");	
+	AddLC(RUS, LOADING_FILE, "Р—Р°РіСЂСѓР·РєР° С„Р°Р№Р»Р°");	
+	AddLC(RUS, LOADING_COMPLETED, "Р—Р°РіСЂСѓР·РєР° С„Р°Р№Р»Р° Р·Р°РІРµСЂС€РµРЅР°!");	
 	//
-	AddLC(RUS, READ_FILE_RESULTS_1, "Файл \"%s\" был успешно загружен!\n");	
-	AddLC(RUS, READ_FILE_RESULTS_2, "%d строк обработано, %d одобрено, %d отклонено с ошибками\n");	
-	AddLC(RUS, SEE_ERROR_FILE, "(файл \"%s\" содержит описания ошибок)\n");	
-	AddLC(RUS, DATA_START_TIME, "Дата начала данных");	
-	AddLC(RUS, DATA_FINAL_TIME, "Дата окончания данных");	
+	AddLC(RUS, READ_FILE_RESULTS_1, "Р¤Р°Р№Р» \"%s\" Р±С‹Р» СѓСЃРїРµС€РЅРѕ Р·Р°РіСЂСѓР¶РµРЅ!\n");	
+	AddLC(RUS, READ_FILE_RESULTS_2, "%d СЃС‚СЂРѕРє РѕР±СЂР°Р±РѕС‚Р°РЅРѕ, %d РѕРґРѕР±СЂРµРЅРѕ, %d РѕС‚РєР»РѕРЅРµРЅРѕ СЃ РѕС€РёР±РєР°РјРё\n");	
+	AddLC(RUS, SEE_ERROR_FILE, "(С„Р°Р№Р» \"%s\" СЃРѕРґРµСЂР¶РёС‚ РѕРїРёСЃР°РЅРёСЏ РѕС€РёР±РѕРє)\n");	
+	AddLC(RUS, DATA_START_TIME, "Р”Р°С‚Р° РЅР°С‡Р°Р»Р° РґР°РЅРЅС‹С…");	
+	AddLC(RUS, DATA_FINAL_TIME, "Р”Р°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ РґР°РЅРЅС‹С…");	
 	//
-	AddLC(RUS, REP_PERIOD, "Отчетный период");	
-	AddLC(RUS, REP_YEAR, "Год");	
-	AddLC(RUS, REP_MONTH, "Месяц");	
-	AddLC(RUS, REP_AMOUNT, "Кол-во");	
-	AddLC(RUS, REP_MIN, "Мин");	
-	AddLC(RUS, REP_MAX, "Макс");	
-	AddLC(RUS, REP_AVG, "Средн");	
-	AddLC(RUS, REP_TOTAL, "Итого за период");	
+	AddLC(RUS, REP_PERIOD, "РћС‚С‡РµС‚РЅС‹Р№ РїРµСЂРёРѕРґ");	
+	AddLC(RUS, REP_YEAR, "Р“РѕРґ");	
+	AddLC(RUS, REP_MONTH, "РњРµСЃСЏС†");	
+	AddLC(RUS, REP_AMOUNT, "РљРѕР»-РІРѕ");	
+	AddLC(RUS, REP_MIN, "РњРёРЅ");	
+	AddLC(RUS, REP_MAX, "РњР°РєСЃ");	
+	AddLC(RUS, REP_AVG, "РЎСЂРµРґРЅ");	
+	AddLC(RUS, REP_TOTAL, "РС‚РѕРіРѕ Р·Р° РїРµСЂРёРѕРґ");	
 	//
-	AddLC(RUS, INTF_CHOOSE_ACTION, "Пожалуйста, выберите действие");	
-	AddLC(RUS, INTF_REP_Y, "Отчет за год");	
-	AddLC(RUS, INTF_REP_MY, "Отчет за месяц.год");	
-	AddLC(RUS, INTF_REP_PERIOD, "Отчет за период месяц.год - месяц.год");	
-	AddLC(RUS, SHOW_FILE_INFO, "Показать информацию о файле");	
-	AddLC(RUS, SHOW_HELP, "Показать справку о программе");	
-	AddLC(RUS, SWITCH_LOCALE, "Переключить язык интерфейса");	
-	AddLC(RUS, QUIT, "Выход");	
+	AddLC(RUS, INTF_CHOOSE_ACTION, "РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РІС‹Р±РµСЂРёС‚Рµ РґРµР№СЃС‚РІРёРµ");	
+	AddLC(RUS, INTF_REP_Y, "РћС‚С‡РµС‚ Р·Р° РіРѕРґ");	
+	AddLC(RUS, INTF_REP_MY, "РћС‚С‡РµС‚ Р·Р° РјРµСЃСЏС†.РіРѕРґ");	
+	AddLC(RUS, INTF_REP_PERIOD, "РћС‚С‡РµС‚ Р·Р° РїРµСЂРёРѕРґ РјРµСЃСЏС†.РіРѕРґ - РјРµСЃСЏС†.РіРѕРґ");	
+	AddLC(RUS, SHOW_FILE_INFO, "РџРѕРєР°Р·Р°С‚СЊ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ С„Р°Р№Р»Рµ");	
+	AddLC(RUS, SHOW_HELP, "РџРѕРєР°Р·Р°С‚СЊ СЃРїСЂР°РІРєСѓ Рѕ РїСЂРѕРіСЂР°РјРјРµ");	
+	AddLC(RUS, SWITCH_LOCALE, "РџРµСЂРµРєР»СЋС‡РёС‚СЊ СЏР·С‹Рє РёРЅС‚РµСЂС„РµР№СЃР°");	
+	AddLC(RUS, QUIT, "Р’С‹С…РѕРґ");	
 	//
-	AddLC(RUS, YOU_CHOSE, "Вы выбрали");	
+	AddLC(RUS, YOU_CHOSE, "Р’С‹ РІС‹Р±СЂР°Р»Рё");	
 	//
-	AddLC(RUS, MONTH_YEAR, "Месяц.Год");	
+	AddLC(RUS, MONTH_YEAR, "РњРµСЃСЏС†.Р“РѕРґ");	
 	//
 	str_replace(
-		"Эта программа считывает из указанного csv-файла информацию о показаниях датчика температуры и формирует статистический отчет.\n"	
-		"Использование: %app_name% -f <имя_файла> [параметры]\n"	
-		"Параметры:\n"
-		"    -h Вызов этой справки\n"	
-		"    -f Укажите csv-файл для обработки. Обязательный параметр.\n"	
-		"       Пример: %app_name% -f data.csv\n"	
-		"    -y Укажите год отчета или год начала отчетного периода.\n"	
-		"       Пример: %app_name% -f data.csv -y 2020\n"	
-		"    -m Укажите номер месяца. Параметр Год должен быть обязательо указан.\n"	
-		"       Пример: %app_name% -f data.csv -y 2020 -m 5\n"	
-		"    -a Укажите конечный год отчетного периода. Год начала периода должен быть обязательно указан.\n"	
-		"       Пример: %app_name% -f data.csv -y 2020 -a 2021\n"	
-		"    -b Укажите конечный месяц отчетного периода. Годы начала и окончания периода должны быть обязательо указаны.\n"	
-		"       Пример: %app_name% -f data.csv -y 2020 -m 5 -a 2021 -b 3\n"	
-		"    -L Выбор локализации. 0 для ENG (default), 1 для RUS.\n"	
-		"       Пример: %app_name% -f data.csv -y 2020 -m 5 -L 1\n",
+		"Р­С‚Р° РїСЂРѕРіСЂР°РјРјР° СЃС‡РёС‚С‹РІР°РµС‚ РёР· СѓРєР°Р·Р°РЅРЅРѕРіРѕ csv-С„Р°Р№Р»Р° РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ РїРѕРєР°Р·Р°РЅРёСЏС… РґР°С‚С‡РёРєР° С‚РµРјРїРµСЂР°С‚СѓСЂС‹ Рё С„РѕСЂРјРёСЂСѓРµС‚ СЃС‚Р°С‚РёСЃС‚РёС‡РµСЃРєРёР№ РѕС‚С‡РµС‚.\n"	
+		"РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ: %app_name% -f <РёРјСЏ_С„Р°Р№Р»Р°> [РїР°СЂР°РјРµС‚СЂС‹]\n"	
+		"РџР°СЂР°РјРµС‚СЂС‹:\n"
+		"    -h Р’С‹Р·РѕРІ СЌС‚РѕР№ СЃРїСЂР°РІРєРё\n"	
+		"    -f РЈРєР°Р¶РёС‚Рµ csv-С„Р°Р№Р» РґР»СЏ РѕР±СЂР°Р±РѕС‚РєРё. РћР±СЏР·Р°С‚РµР»СЊРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ.\n"	
+		"       РџСЂРёРјРµСЂ: %app_name% -f data.csv\n"	
+		"    -y РЈРєР°Р¶РёС‚Рµ РіРѕРґ РѕС‚С‡РµС‚Р° РёР»Рё РіРѕРґ РЅР°С‡Р°Р»Р° РѕС‚С‡РµС‚РЅРѕРіРѕ РїРµСЂРёРѕРґР°.\n"	
+		"       РџСЂРёРјРµСЂ: %app_name% -f data.csv -y 2020\n"	
+		"    -m РЈРєР°Р¶РёС‚Рµ РЅРѕРјРµСЂ РјРµСЃСЏС†Р°. РџР°СЂР°РјРµС‚СЂ Р“РѕРґ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РѕР±СЏР·Р°С‚РµР»СЊРѕ СѓРєР°Р·Р°РЅ.\n"	
+		"       РџСЂРёРјРµСЂ: %app_name% -f data.csv -y 2020 -m 5\n"	
+		"    -a РЈРєР°Р¶РёС‚Рµ РєРѕРЅРµС‡РЅС‹Р№ РіРѕРґ РѕС‚С‡РµС‚РЅРѕРіРѕ РїРµСЂРёРѕРґР°. Р“РѕРґ РЅР°С‡Р°Р»Р° РїРµСЂРёРѕРґР° РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ СѓРєР°Р·Р°РЅ.\n"	
+		"       РџСЂРёРјРµСЂ: %app_name% -f data.csv -y 2020 -a 2021\n"	
+		"    -b РЈРєР°Р¶РёС‚Рµ РєРѕРЅРµС‡РЅС‹Р№ РјРµСЃСЏС† РѕС‚С‡РµС‚РЅРѕРіРѕ РїРµСЂРёРѕРґР°. Р“РѕРґС‹ РЅР°С‡Р°Р»Р° Рё РѕРєРѕРЅС‡Р°РЅРёСЏ РїРµСЂРёРѕРґР° РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РѕР±СЏР·Р°С‚РµР»СЊРѕ СѓРєР°Р·Р°РЅС‹.\n"	
+		"       РџСЂРёРјРµСЂ: %app_name% -f data.csv -y 2020 -m 5 -a 2021 -b 3\n"	
+		"    -L Р’С‹Р±РѕСЂ Р»РѕРєР°Р»РёР·Р°С†РёРё. 0 РґР»СЏ ENG (default), 1 РґР»СЏ RUS.\n"	
+		"       РџСЂРёРјРµСЂ: %app_name% -f data.csv -y 2020 -m 5 -L 1\n",
 		"%app_name%", APP_NAME, buf
 	);
 	AddLC(RUS, HELP, buf);  
